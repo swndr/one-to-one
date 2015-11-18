@@ -7,21 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE3186C01109D73CE8629C73 /* Pods_OneToOne.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */; };
 		C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21610891BFCEFE300284FE9 /* AppDelegate.swift */; };
-		C216108C1BFCEFE300284FE9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216108B1BFCEFE300284FE9 /* ViewController.swift */; };
+		C216108C1BFCEFE300284FE9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216108B1BFCEFE300284FE9 /* LoginViewController.swift */; };
 		C216108F1BFCEFE300284FE9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C216108D1BFCEFE300284FE9 /* Main.storyboard */; };
 		C21610911BFCEFE400284FE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C21610901BFCEFE400284FE9 /* Assets.xcassets */; };
 		C21610941BFCEFE400284FE9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */; };
+		C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216109B1BFCF1F400284FE9 /* PairingViewController.swift */; };
+		C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33BFFEFBD7DEBCFAE66A0EA9 /* Pods-OneToOne.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneToOne.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne.debug.xcconfig"; sourceTree = "<group>"; };
+		A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneToOne.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C21610861BFCEFE300284FE9 /* OneToOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneToOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C21610891BFCEFE300284FE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C216108B1BFCEFE300284FE9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C216108B1BFCEFE300284FE9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C216108E1BFCEFE300284FE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C21610901BFCEFE400284FE9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C21610931BFCEFE400284FE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C21610951BFCEFE400284FE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C216109B1BFCF1F400284FE9 /* PairingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PairingViewController.swift; sourceTree = "<group>"; };
+		C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		D0EB5321BAB0871EC94C9C0B /* Pods-OneToOne.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneToOne.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +37,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE3186C01109D73CE8629C73 /* Pods_OneToOne.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0DF283CA244D4A1E9F1809E1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C216107D1BFCEFE300284FE9 = {
 			isa = PBXGroup;
 			children = (
 				C21610881BFCEFE300284FE9 /* OneToOne */,
 				C21610871BFCEFE300284FE9 /* Products */,
+				F653860F4264D902FD827BE9 /* Pods */,
+				0DF283CA244D4A1E9F1809E1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -55,13 +74,24 @@
 			isa = PBXGroup;
 			children = (
 				C21610891BFCEFE300284FE9 /* AppDelegate.swift */,
-				C216108B1BFCEFE300284FE9 /* ViewController.swift */,
+				C216108B1BFCEFE300284FE9 /* LoginViewController.swift */,
+				C216109B1BFCF1F400284FE9 /* PairingViewController.swift */,
+				C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */,
 				C216108D1BFCEFE300284FE9 /* Main.storyboard */,
-				C21610901BFCEFE400284FE9 /* Assets.xcassets */,
 				C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */,
+				C21610901BFCEFE400284FE9 /* Assets.xcassets */,
 				C21610951BFCEFE400284FE9 /* Info.plist */,
 			);
 			path = OneToOne;
+			sourceTree = "<group>";
+		};
+		F653860F4264D902FD827BE9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				33BFFEFBD7DEBCFAE66A0EA9 /* Pods-OneToOne.debug.xcconfig */,
+				D0EB5321BAB0871EC94C9C0B /* Pods-OneToOne.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +101,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C21610981BFCEFE400284FE9 /* Build configuration list for PBXNativeTarget "OneToOne" */;
 			buildPhases = (
+				101D150C3BED160C15D38A1B /* Check Pods Manifest.lock */,
 				C21610821BFCEFE300284FE9 /* Sources */,
 				C21610831BFCEFE300284FE9 /* Frameworks */,
 				C21610841BFCEFE300284FE9 /* Resources */,
+				1A1EDF3156224A53065B1E46 /* Embed Pods Frameworks */,
+				6BDEECF111DDBCC22DB85683 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -130,12 +163,62 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		101D150C3BED160C15D38A1B /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		1A1EDF3156224A53065B1E46 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6BDEECF111DDBCC22DB85683 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C21610821BFCEFE300284FE9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C216108C1BFCEFE300284FE9 /* ViewController.swift in Sources */,
+				C216108C1BFCEFE300284FE9 /* LoginViewController.swift in Sources */,
+				C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */,
+				C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */,
 				C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,7 +262,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Wander (VNT823E775)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sam Wander (VNT823E775)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -201,6 +285,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "9e7eb2fd-24b0-45d0-9b61-f1916c4cceb5";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -223,7 +308,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Wander (VNT823E775)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sam Wander (VNT823E775)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -238,6 +324,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "9e7eb2fd-24b0-45d0-9b61-f1916c4cceb5";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -245,23 +332,29 @@
 		};
 		C21610991BFCEFE400284FE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33BFFEFBD7DEBCFAE66A0EA9 /* Pods-OneToOne.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Wander (VNT823E775)";
 				INFOPLIST_FILE = OneToOne/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fbd.OneToOne;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9e7eb2fd-24b0-45d0-9b61-f1916c4cceb5";
 			};
 			name = Debug;
 		};
 		C216109A1BFCEFE400284FE9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D0EB5321BAB0871EC94C9C0B /* Pods-OneToOne.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Wander (VNT823E775)";
 				INFOPLIST_FILE = OneToOne/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fbd.OneToOne;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9e7eb2fd-24b0-45d0-9b61-f1916c4cceb5";
 			};
 			name = Release;
 		};
@@ -284,6 +377,7 @@
 				C216109A1BFCEFE400284FE9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

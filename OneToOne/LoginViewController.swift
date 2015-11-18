@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  LoginViewController.swift
 //  OneToOne
 //
 //  Created by Sam Wander on 11/18/15.
@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Parse
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
