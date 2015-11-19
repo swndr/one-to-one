@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576781BFD7D5D00DD5AB9 /* Common.swift */; settings = {ASSET_TAGS = (); }; };
 		AE3186C01109D73CE8629C73 /* Pods_OneToOne.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */; };
 		C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21610891BFCEFE300284FE9 /* AppDelegate.swift */; };
 		C216108C1BFCEFE300284FE9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216108B1BFCEFE300284FE9 /* LoginViewController.swift */; };
@@ -19,6 +21,8 @@
 
 /* Begin PBXFileReference section */
 		33BFFEFBD7DEBCFAE66A0EA9 /* Pods-OneToOne.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneToOne.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne.debug.xcconfig"; sourceTree = "<group>"; };
+		5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		5DB576781BFD7D5D00DD5AB9 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneToOne.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C21610861BFCEFE300284FE9 /* OneToOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneToOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C21610891BFCEFE300284FE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -78,9 +82,11 @@
 				C216109B1BFCF1F400284FE9 /* PairingViewController.swift */,
 				C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */,
 				C216108D1BFCEFE300284FE9 /* Main.storyboard */,
+				5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */,
 				C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */,
 				C21610901BFCEFE400284FE9 /* Assets.xcassets */,
 				C21610951BFCEFE400284FE9 /* Info.plist */,
+				5DB576781BFD7D5D00DD5AB9 /* Common.swift */,
 			);
 			path = OneToOne;
 			sourceTree = "<group>";
@@ -220,6 +226,8 @@
 				C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */,
 				C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */,
 				C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */,
+				5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */,
+				5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +345,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Wander (VNT823E775)";
 				INFOPLIST_FILE = OneToOne/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fbd.OneToOne;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -351,6 +360,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Wander (VNT823E775)";
 				INFOPLIST_FILE = OneToOne/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fbd.OneToOne;
 				PRODUCT_NAME = "$(TARGET_NAME)";
