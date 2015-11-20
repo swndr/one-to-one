@@ -84,6 +84,7 @@
                         <animations/>
                         <constraints>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3e7-B4-Afh"/>
+                            <constraint firstItem="Fh8-Pl-zcW" firstAttribute="top" secondItem="R5t-0p-6n8" secondAttribute="bottom" constant="48" id="MwF-Hh-926"/>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="TSB-i5-gwJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Fh8-Pl-zcW" secondAttribute="trailing" id="ZWb-sV-v6q"/>
                         </constraints>
