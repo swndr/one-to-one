@@ -119,6 +119,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwH-38-Tt9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+<<<<<<< HEAD
             <point key="canvasLocation" x="1887.1875" y="422.00704225352109"/>
         </scene>
         <!--Main View Controller-->
@@ -153,6 +154,9 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HFe-S7-eWU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1103" y="-363"/>
+=======
+            <point key="canvasLocation" x="1786" y="392"/>
+>>>>>>> master
         </scene>
         <!--Pairing View Controller-->
         <scene sceneID="hso-x2-L2o">
@@ -196,7 +200,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+<<<<<<< HEAD
             <point key="canvasLocation" x="1103.4375" y="422.00704225352109"/>
+=======
+            <point key="canvasLocation" x="1127" y="392"/>
+>>>>>>> master
         </scene>
     </scenes>
 </document>
