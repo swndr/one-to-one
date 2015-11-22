@@ -25,8 +25,10 @@ class MainViewController: UIViewController {
         pairingViewController = storyboard.instantiateViewControllerWithIdentifier("PairingViewController")
         cameraViewController = storyboard.instantiateViewControllerWithIdentifier("CameraViewController")
 
-        // Do any additional setup after loading the view.
-        contentView.addSubview(loginViewController.view)
+        self.addChildViewController(loginViewController)
+        loginViewController.view.frame = self.view.bounds
+        self.view.addSubview(loginViewController.view)
+        loginViewController.didMoveToParentViewController(self)
     }
 
     override func didReceiveMemoryWarning() {
