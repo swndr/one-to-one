@@ -49,49 +49,6 @@ class LoginViewController: UIViewController {
             }
             
         }
-        /*
-        
-        
-        /////////////
-        // if field is correct
-        if textField.text == "Seabiscuit" {
-        delay(2){
-        self.pairingIndicator.stopAnimating()
-        self.performSegueWithIdentifier("pairingSegue", sender: self)
-        UIView.animateWithDuration(0.3, delay: 0, options: [], animations: { () -> Void in
-        self.PairingTextParentView.alpha = 0
-        
-        }, completion: { (Bool) -> Void in
-        // Hide the keyboard
-        self.view.endEditing(true)
-        })
-        }
-        }
-        
-        // if field is empty
-        if textField.text!.isEmpty {
-        self.pairingIndicator.stopAnimating()
-        let alertController = UIAlertController(title: "Try Again", message: "Please enter a word to start pairing.", preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-        }
-        alertController.addAction(OKAction)
-        self.presentViewController(alertController, animated: true) {
-        }
-        }
-        
-        // if field is incorrect
-        else {
-        delay(2){
-        self.pairingIndicator.stopAnimating()
-        let alertController = UIAlertController(title: "Try Again", message: "Please enter a word to start pairing.", preferredStyle: .Alert)
-        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-        }
-        alertController.addAction(OKAction)
-        self.presentViewController(alertController, animated: true) {
-        }
-        }
-        }
-        */
         
     }
     
@@ -99,7 +56,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
         nextButton.alpha = 0
         textField.text = ""
         
@@ -118,7 +74,6 @@ class LoginViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
@@ -129,13 +84,5 @@ class LoginViewController: UIViewController {
     func keyboardWillHide(notification: NSNotification!) {
     }
     
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
+
 }
