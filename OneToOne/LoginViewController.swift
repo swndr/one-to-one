@@ -16,49 +16,82 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var PairingTextParentView: UIView!
     
-    
     @IBAction func didPressNext(sender: AnyObject) {
         self.pairingIndicator.startAnimating()
         nextButton.selected = true
+
+        let user = PFUser()
         
-        // if field is correct
-        if textField.text == "Seabiscuit" {
-            delay(2){
-                self.pairingIndicator.stopAnimating()
+        user.username = textField.text
+        user.password = textField.text
+        
+        user.signUpInBackgroundWithBlock { (status: Bool, error: NSError?) -> Void in
+            if error == nil {
                 self.performSegueWithIdentifier("pairingSegue", sender: self)
-                UIView.animateWithDuration(0.3, delay: 0, options: [], animations: { () -> Void in
-                    self.PairingTextParentView.alpha = 0
-                    
-                    }, completion: { (Bool) -> Void in
-                        // Hide the keyboard
-                        self.view.endEditing(true)
-                })
-            }
-        }
-        
-        // if field is empty
-        if textField.text!.isEmpty {
-            self.pairingIndicator.stopAnimating()
-            let alertController = UIAlertController(title: "Try Again", message: "Please enter a word to start pairing.", preferredStyle: .Alert)
-            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-            }
-            alertController.addAction(OKAction)
-            self.presentViewController(alertController, animated: true) {
-            }
-        }
-            
-            // if field is incorrect
-        else {
-            delay(2){
                 self.pairingIndicator.stopAnimating()
-                let alertController = UIAlertController(title: "Try Again", message: "Please enter a word to start pairing.", preferredStyle: .Alert)
+                let alertController = UIAlertController(title: "Success", message: "account created", preferredStyle: .Alert)
                 let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
                 }
                 alertController.addAction(OKAction)
                 self.presentViewController(alertController, animated: true) {
                 }
+                
+            } else {
+                print("error: \(error)")
+                self.pairingIndicator.stopAnimating()
+                let alertController = UIAlertController(title: "Error", message: "error: \(error)", preferredStyle: .Alert)
+                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                }
+                alertController.addAction(OKAction)
+                self.presentViewController(alertController, animated: true) {
+                }
+
             }
+            
         }
+        /*
+        
+        
+        /////////////
+        // if field is correct
+        if textField.text == "Seabiscuit" {
+        delay(2){
+        self.pairingIndicator.stopAnimating()
+        self.performSegueWithIdentifier("pairingSegue", sender: self)
+        UIView.animateWithDuration(0.3, delay: 0, options: [], animations: { () -> Void in
+        self.PairingTextParentView.alpha = 0
+        
+        }, completion: { (Bool) -> Void in
+        // Hide the keyboard
+        self.view.endEditing(true)
+        })
+        }
+        }
+        
+        // if field is empty
+        if textField.text!.isEmpty {
+        self.pairingIndicator.stopAnimating()
+        let alertController = UIAlertController(title: "Try Again", message: "Please enter a word to start pairing.", preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+        }
+        alertController.addAction(OKAction)
+        self.presentViewController(alertController, animated: true) {
+        }
+        }
+        
+        // if field is incorrect
+        else {
+        delay(2){
+        self.pairingIndicator.stopAnimating()
+        let alertController = UIAlertController(title: "Try Again", message: "Please enter a word to start pairing.", preferredStyle: .Alert)
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+        }
+        alertController.addAction(OKAction)
+        self.presentViewController(alertController, animated: true) {
+        }
+        }
+        }
+        */
         
     }
     
@@ -68,10 +101,7 @@ class LoginViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         nextButton.alpha = 0
-        
-        /*
-        var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
-        */
+        textField.text = ""
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:",
             name: UIKeyboardWillShowNotification, object: nil)
@@ -82,44 +112,15 @@ class LoginViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(animated: Bool) {
+        textField.text = ""
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-    func updateTime() {
-    
-    var currentTime = NSDate.timeIntervalSinceReferenceDate()
-    
-    //Find the difference between current time and start time.
-    var elapsedTime: NSTimeInterval = currentTime - startTime
-    
-    //calculate the minutes in elapsed time.
-    let minutes = UInt8(elapsedTime / 60.0)
-    elapsedTime -= (NSTimeInterval(minutes) * 60)
-    
-    //calculate the seconds in elapsed time.
-    let seconds = UInt8(elapsedTime)
-    elapsedTime -= NSTimeInterval(seconds)
-    
-    //add the leading zero for minutes, seconds and millseconds and store them as string constants
-    let strMinutes = String(format: "%02d", minutes)
-    let strSeconds = String(format: "%02d", seconds)
-    
-    //concatenate minuets, seconds as assign it to the UILabel
-    
-    countdownLabel.text = "\(strMinutes):\(strSeconds)"
-    
-    }
-    
-    @IBAction func countdownOn(sender: AnyObject) {
-    let aSelector : Selector = "updateTime"
-    timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: aSelector, userInfo: nil, repeats: true)
-    startTime = NSDate.timeIntervalSinceReferenceDate()
-    }
-    
-    */
     
     func keyboardWillShow(notification: NSNotification!) {
         nextButton.alpha = 1
@@ -127,7 +128,6 @@ class LoginViewController: UIViewController {
     }
     func keyboardWillHide(notification: NSNotification!) {
     }
-    
     
     /*
     // MARK: - Navigation
