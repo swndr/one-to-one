@@ -68,31 +68,10 @@ func getCurrentUser() -> UserStatus {
     return currentUserStatus
 }
 
-// On submitting code from text field
-func lookForCode(enteredCode: String, completion: (result: Bool) -> Void) {
+// Validate code from text field
+func validateCode(enteredCode: String, completion: (result:Bool, codeStatus:CodeStatus, code:PFObject?) -> Void) {
     
-    // Query code from text field
-    let query = PFQuery(className:"AccountCode")
-    query.whereKey("code", equalTo:(enteredCode))
-    query.findObjectsInBackgroundWithBlock {
-        (objects: [PFObject]?, error: NSError?) -> Void in
-        
-        if error == nil {
-            // Found a code
-            if objects!.count == 1 {
-                completion(result: true)
-            }
-        } else {
-            // Log details of the failure
-            print("Error: \(error!) \(error!.userInfo)")
-        }
-    }
-}
-
-
-// On retrieving code from Parse
-func validateCode(enteredCode: String) -> (status:CodeStatus, object:PFObject?) {
-    
+    var querySuccess = false
     var status = CodeStatus()
     var codeObject: PFObject?
     
@@ -101,7 +80,7 @@ func validateCode(enteredCode: String) -> (status:CodeStatus, object:PFObject?) 
     query.whereKey("code", equalTo:(enteredCode))
     query.findObjectsInBackgroundWithBlock {
         (objects: [PFObject]?, error: NSError?) -> Void in
-        
+        print("Searching...")
         if error == nil {
             // Found a code
             if objects!.count == 1 {
@@ -114,13 +93,21 @@ func validateCode(enteredCode: String) -> (status:CodeStatus, object:PFObject?) 
                 } else {
                     status = .Valid
                 }
-                            }
+            querySuccess = true
+            //completion(result: true, codeStatus: status, code: codeObject)
+            } else {
+            // Didn't find one
+            querySuccess = true
+            }
         } else {
             // Log details of the failure
             print("Error: \(error!) \(error!.userInfo)")
+            querySuccess = false
+            //completion(result: false, codeStatus: status, code: codeObject)
         }
+        
+        completion(result: querySuccess, codeStatus: status, code: codeObject)
     }
-    return (status,codeObject)
 }
 
 // New initial user
@@ -171,12 +158,7 @@ func createUser(codeObject: PFObject, completion: (result: Bool) -> Void) {
     newUser!.username = randomStringWithLength(8) as String
     newUser!.password = randomStringWithLength(8) as String
     
-    // ** Something to fix here **
-    if codeObject["receiver"] as! String != "pending" {
-        newUser!["recipient"] = codeObject["creator"] // The user who created this code
-    } else {
-        newUser!["recipient"] = "pending"
-    }
+    newUser!["recipient"] = codeObject["creator"] // The user who created this code
     newUser!["code"] = codeObject["code"]
     
     newUser!.signUpInBackgroundWithBlock {
