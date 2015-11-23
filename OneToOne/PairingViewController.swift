@@ -11,29 +11,44 @@ import Parse
 
 class PairingViewController: UIViewController {
 
+    var enteredCode = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        let user = PFUser.currentUser()
+        
+        if user != nil {
+            attemptToPair(user!) { (result, userStatus) -> Void in
+                if result {
+                    switch userStatus {
+                    case .Paired:
+                        print("Now paired")
+                        // Go to camera screen
+                        self.performSegueWithIdentifier("cameraSegue", sender: self)
+                    default:
+                        print("Still not paired")
+                    }
+                }
+            }
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "cameraSegue" {
+            if let destinationVC = segue.destinationViewController as? CameraViewController {
+                destinationVC.justPaired = true
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func didPressCancel(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
+        // Go to login screen ** maybe need to figure appropriate animation for this? **
+        self.performSegueWithIdentifier("loginSegue", sender: self)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

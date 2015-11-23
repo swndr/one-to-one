@@ -16,16 +16,22 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var PairingTextParentView: UIView!
     
+    var returningFromPairing = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var user = PFUser.currentUser()
+        let user = PFUser.currentUser()
         
         if user == nil {
             // Create anonymous user
             createAnonUser()
         } else {
             print("Found existing user")
+            // This user cancelled from pairing, or had an expired code ** not completely sure about this logic! **
+            if user!["recipient"] as! String == "pending" {
+                returningFromPairing = true
+            }
         }
         
         nextButton.alpha = 0
@@ -47,28 +53,47 @@ class LoginViewController: UIViewController {
     @IBAction func didPressNext(sender: AnyObject) {
         self.pairingIndicator.startAnimating()
         nextButton.selected = true
-                
+        
         validateCode(textField.text!) { (result, codeStatus, code) -> Void in
             
             if result {
                 switch codeStatus {
                 case .None:
-                    // New code, create new user
+                    // New code
                     self.pairingIndicator.stopAnimating()
-                    createUser(self.textField.text!, completion: { (success) -> Void in
-                        if success {
-                            // Go to pairing screen
-                            self.performSegueWithIdentifier("pairingSegue", sender: self)
-                        } else {
-                            let alertController = UIAlertController(title: "Please try again", message: "There was a problem creating your account.", preferredStyle: .Alert)
-                            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
-                                // Focus textfield again
+                    if !self.returningFromPairing {
+                        // Create new user
+                        createUser(self.textField.text!, completion: { (success) -> Void in
+                            if success {
+                                // Go to pairing screen
+                                self.performSegueWithIdentifier("pairingSegue", sender: self)
+                            } else {
+                                let alertController = UIAlertController(title: "Please try again", message: "There was a problem creating your account.", preferredStyle: .Alert)
+                                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                    // Focus textfield again
+                                }
+                                alertController.addAction(OKAction)
+                                self.presentViewController(alertController, animated: true) {
+                                }
                             }
-                            alertController.addAction(OKAction)
-                            self.presentViewController(alertController, animated: true) {
+                        })
+                    } else {
+                        // Give existing user a new code
+                        renewCode(self.textField.text!, completion: { (success) -> Void in
+                            if success {
+                                // Go to pairing screen
+                                self.performSegueWithIdentifier("pairingSegue", sender: self)
+                            } else {
+                                let alertController = UIAlertController(title: "Please try again", message: "There was a problem creating your account.", preferredStyle: .Alert)
+                                let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                                    // Focus textfield again
+                                }
+                                alertController.addAction(OKAction)
+                                self.presentViewController(alertController, animated: true) {
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                     
                 case .Expired:
                     // Code has expired, show error
@@ -112,6 +137,18 @@ class LoginViewController: UIViewController {
                 }
             } else {
                 print("Did not succeed")
+            }
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "pairingSegue" {
+            if let destinationVC = segue.destinationViewController as? PairingViewController {
+                destinationVC.enteredCode = textField.text!
+            }
+        } else if segue.identifier == "cameraSegue" {
+            if let destinationVC = segue.destinationViewController as? CameraViewController {
+                destinationVC.justPaired = true
             }
         }
     }

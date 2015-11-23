@@ -11,15 +11,19 @@ import Parse
 
 class CameraViewController: UIViewController {
 
+    var justPaired = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("opened camera")
-        // Do any additional setup after loading the view.
+        print("Opened camera")
+        
+        if justPaired {
+            print("Show NUX banner")
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 }

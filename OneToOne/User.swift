@@ -93,19 +93,13 @@ func validateCode(enteredCode: String, completion: (result:Bool, codeStatus:Code
                 } else {
                     status = .Valid
                 }
-            querySuccess = true
-            //completion(result: true, codeStatus: status, code: codeObject)
-            } else {
-            // Didn't find one
-            querySuccess = true
             }
+            querySuccess = true
         } else {
             // Log details of the failure
             print("Error: \(error!) \(error!.userInfo)")
             querySuccess = false
-            //completion(result: false, codeStatus: status, code: codeObject)
         }
-        
         completion(result: querySuccess, codeStatus: status, code: codeObject)
     }
 }
@@ -182,6 +176,46 @@ func createUser(codeObject: PFObject, completion: (result: Bool) -> Void) {
     }
 }
 
+// New code for existing user
+func renewCode(enteredCode: String, completion: (result: Bool) -> Void) {
+    
+    let existingUser = PFUser.currentUser()
+    
+    deleteCode(existingUser!) { (result) -> Void in
+        if result {
+            // Query succeeded, may or may not have had to delete a code
+          
+            // Set new details
+            existingUser!["recipient"] = "pending"
+            existingUser!["code"] = enteredCode // Store the code with user
+            
+            existingUser!.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+                if let error = error {
+                    let errorString = error.userInfo["error"] as? NSString
+                    print(errorString)
+                } else {
+                    let accountCode = PFObject(className:"AccountCode")
+                    accountCode["code"] = enteredCode
+                    accountCode["used"] = false
+                    accountCode["creator"] = existingUser!["username"] // Person who created code
+                    accountCode["receiver"] = "pending" // No receiver yet
+                    
+                    // Permissions...
+                    let acl = PFACL()
+                    acl.setPublicReadAccess(true)
+                    acl.setPublicWriteAccess(true) // So next person can be added as recipient
+                    accountCode.ACL = acl
+                    accountCode.saveInBackground()
+                    
+                    completion(result: true)
+                }
+            }
+        } else {
+            // Querying code failed, should we retry?
+        }
+    }
+}
+
 // Check when submit code, or while waiting to pair
 func hasCodeExpired(codeObject: PFObject) -> Bool {
 
@@ -210,10 +244,39 @@ func hasCodeBeenUsed(codeObject: PFObject) -> Bool {
     return used
 }
 
-// To be called from pairing screen if code not expired
-func attemptToPair(currentUser: PFUser) -> Bool {
+// Attempt to delete a used / expired code (may no longer exist)
+func deleteCode(currentUser: PFUser, completion: (result:Bool) -> Void) {
     
-    var paired = false
+    let currentUser = PFUser.currentUser()
+    
+    // Find their code and delete it first
+    let query = PFQuery(className:"AccountCode")
+    query.whereKey("code", equalTo:(currentUser!["code"])) // The code they signed up with is stored with the user
+    query.findObjectsInBackgroundWithBlock {
+        (objects: [PFObject]?, error: NSError?) -> Void in
+        
+        if error == nil {
+            // Found a code
+            if objects!.count == 1 {
+                // Existing code entry
+                let codeObject = objects!.first
+                // Now delete the code so it can be reused
+                codeObject!.deleteInBackground()
+                print("Found and deleted a code")
+            }
+            completion(result: true)
+        } else {
+            // Log details of the failure
+            print("Error: \(error!) \(error!.userInfo)")
+        }
+    }
+}
+
+// To be called from pairing screen if code not expired
+func attemptToPair(currentUser: PFUser, completion: (result:Bool, userStatus:UserStatus) -> Void) {
+    
+    var querySuccess = false
+    var status = UserStatus()
     
     let query = PFQuery(className:"AccountCode")
     query.whereKey("code", equalTo:(currentUser["code"])) // The code they signed up with is stored with the user
@@ -233,7 +296,7 @@ func attemptToPair(currentUser: PFUser) -> Bool {
                     // Recevier found – associate recipient with user
                     currentUser["recipient"] = codeObject!["receiver"]
                     currentUser.saveInBackground()
-                    paired = true
+                    status = .Paired
 
                     // Get recipient to notify
                     let recipient: PFUser?
@@ -258,19 +321,17 @@ func attemptToPair(currentUser: PFUser) -> Bool {
                     // Now delete the code so it can be reused
                     codeObject!.deleteInBackground() 
                 }
+                querySuccess = true
+                completion(result: true, userStatus: status)
             } else {
                 // Log details of the failure
                 print("Error: \(error!) \(error!.userInfo)")
+                querySuccess = false
             }
         }
+        completion(result: querySuccess, userStatus: status)
     }
-    
-    return paired
 }
-
-//
-// Need way for existing user with expired code to delete it, and create a new one...
-//
 
 func randomStringWithLength (len : Int) -> NSString {
     
