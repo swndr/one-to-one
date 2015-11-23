@@ -29,6 +29,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     application.registerForRemoteNotificationTypes(types)
                 }
         
+        func handleUserStatus() {
+            
+            self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            var rootVC = UIViewController()
+            
+            switch getCurrentUser() {
+            case .None:
+                // Go to login
+                rootVC = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
+            case .Anonymous:
+                // Go to login
+                rootVC = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
+            case .Unpaired:
+                // Go to pairing screen
+                rootVC = storyboard.instantiateViewControllerWithIdentifier("PairingViewController")
+            case .Paired:
+                // Go to camera
+                rootVC = storyboard.instantiateViewControllerWithIdentifier("CameraViewController")
+            }
+            
+            if self.window != nil {
+                print("Found window")
+                self.window!.rootViewController = rootVC
+            }
+        }
+        
+        handleUserStatus()
         
         return true
     }
@@ -78,7 +106,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        // Clear the badge
+        let currentInstallation = PFInstallation.currentInstallation()
+        if currentInstallation.badge != 0 {
+            currentInstallation.badge = 0
+            currentInstallation.saveEventually()
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {

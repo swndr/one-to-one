@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576781BFD7D5D00DD5AB9 /* Common.swift */; settings = {ASSET_TAGS = (); }; };
+		5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */; };
+		5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576781BFD7D5D00DD5AB9 /* Common.swift */; };
 		AE3186C01109D73CE8629C73 /* Pods_OneToOne.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */; };
 		C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21610891BFCEFE300284FE9 /* AppDelegate.swift */; };
 		C216108C1BFCEFE300284FE9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216108B1BFCEFE300284FE9 /* LoginViewController.swift */; };
@@ -17,6 +17,8 @@
 		C21610941BFCEFE400284FE9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */; };
 		C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216109B1BFCF1F400284FE9 /* PairingViewController.swift */; };
 		C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */; };
+		C2ACB92D1C026C260058B6FF /* ReceivedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */; };
+		C2ACB92E1C026C260058B6FF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ACB92C1C026C260058B6FF /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		C21610951BFCEFE400284FE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C216109B1BFCF1F400284FE9 /* PairingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PairingViewController.swift; sourceTree = "<group>"; };
 		C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceivedImage.swift; sourceTree = "<group>"; };
+		C2ACB92C1C026C260058B6FF /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D0EB5321BAB0871EC94C9C0B /* Pods-OneToOne.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneToOne.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,15 +82,17 @@
 			isa = PBXGroup;
 			children = (
 				C21610891BFCEFE300284FE9 /* AppDelegate.swift */,
+				5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */,
 				C216108B1BFCEFE300284FE9 /* LoginViewController.swift */,
 				C216109B1BFCF1F400284FE9 /* PairingViewController.swift */,
 				C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */,
+				C2ACB92C1C026C260058B6FF /* User.swift */,
+				C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */,
+				5DB576781BFD7D5D00DD5AB9 /* Common.swift */,
 				C216108D1BFCEFE300284FE9 /* Main.storyboard */,
-				5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */,
 				C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */,
 				C21610901BFCEFE400284FE9 /* Assets.xcassets */,
 				C21610951BFCEFE400284FE9 /* Info.plist */,
-				5DB576781BFD7D5D00DD5AB9 /* Common.swift */,
 			);
 			path = OneToOne;
 			sourceTree = "<group>";
@@ -229,8 +235,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C216108C1BFCEFE300284FE9 /* LoginViewController.swift in Sources */,
+				C2ACB92D1C026C260058B6FF /* ReceivedImage.swift in Sources */,
 				C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */,
 				C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */,
+				C2ACB92E1C026C260058B6FF /* User.swift in Sources */,
 				C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */,
 				5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */,
 				5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */,
