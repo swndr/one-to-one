@@ -72,24 +72,27 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     @IBAction func didPressCancel(sender: AnyObject) {
-        // Go to login screen ** maybe need to figure appropriate animation for this? **
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        var loginViewController: UIViewController!
-        loginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
-        self.addChildViewController(loginViewController)
-        loginViewController.view.frame = self.view.bounds
-        self.view.addSubview(loginViewController.view)
-        loginViewController.didMoveToParentViewController(self)
-
-        /*
-        self.transitionFromViewController(self, toViewController: loginViewController, duration: 0.2, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
-            
-            }) { (success) -> Void in
-                //self.removeFromParentViewController()
-                loginViewController.didMoveToParentViewController(self)
-                loginViewController.view.frame = self.view.bounds
-        }*/
+        
+        // Go to login screen
+        if self.parentViewController == nil {
+        // We came from login, so can dismiss
+            self.dismissViewControllerAnimated(false, completion: nil)
+        } else {
+            // Pairing was initial VC
+            var loginViewController = UIViewController()
+            loginViewController = self.storyboard!.instantiateViewControllerWithIdentifier("LoginViewController")
+            let containerVC = self.parentViewController!
+            containerVC.addChildViewController(loginViewController)
+            self.willMoveToParentViewController(nil)
+            containerVC.transitionFromViewController(self, toViewController: loginViewController, duration: 0.2, options: [], animations: { () -> Void in
+                
+                }) { (success) -> Void in
+                    loginViewController.didMoveToParentViewController(containerVC)
+                    loginViewController.view.frame = self.view.bounds
+            }
+        }
     }
+    
     @IBAction func didPressSendMessage(sender: AnyObject) {
         if MFMessageComposeViewController.canSendText() {
             let messageVC = MFMessageComposeViewController()

@@ -21,6 +21,21 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        nextButton.alpha = 0
+        textField.text = ""
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:",
+            name: UIKeyboardWillShowNotification, object: nil)
+        
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:",
+            name: UIKeyboardWillHideNotification, object: nil)
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        textField.text = ""
+        
         let user = PFUser.currentUser()
         
         if user == nil {
@@ -38,21 +53,6 @@ class LoginViewController: UIViewController {
                 }
             }
         }
-        
-        nextButton.alpha = 0
-        textField.text = ""
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:",
-            name: UIKeyboardWillShowNotification, object: nil)
-        
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:",
-            name: UIKeyboardWillHideNotification, object: nil)
-        
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        textField.text = ""
     }
     
     @IBAction func didPressNext(sender: AnyObject) {

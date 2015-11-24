@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         Parse.setApplicationId("myeITsplOiQ4R1ATdPg9fSsF9gNMKBwT8v00OwER", clientKey: "xumfIymIDYPpdxBtoQBY0a3JSGdieXGrUiCWdJeM")
@@ -33,27 +32,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            var rootVC = UIViewController()
+            var containerVC = UIViewController()
+            var initialVC = UIViewController()
+            
+            containerVC = storyboard.instantiateViewControllerWithIdentifier("MainViewController")
+            
+            if self.window != nil {
+                print("Found window")
+                self.window!.rootViewController = containerVC
+            }
             
             switch getCurrentUser() {
             case .None:
                 // Go to login
-                rootVC = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
+                initialVC = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
             case .Anonymous:
                 // Go to login
-                rootVC = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
+                initialVC = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
             case .Unpaired:
                 // Go to pairing screen
-                rootVC = storyboard.instantiateViewControllerWithIdentifier("PairingViewController")
+                initialVC = storyboard.instantiateViewControllerWithIdentifier("PairingViewController")
             case .Paired:
                 // Go to camera
-                rootVC = storyboard.instantiateViewControllerWithIdentifier("CameraViewController")
+                initialVC = storyboard.instantiateViewControllerWithIdentifier("CameraViewController")
             }
             
-            if self.window != nil {
-                print("Found window")
-                self.window!.rootViewController = rootVC
-            }
+            containerVC.addChildViewController(initialVC)
+            initialVC.view.frame = containerVC.view.bounds
+            containerVC.view.addSubview(initialVC.view)
+            initialVC.didMoveToParentViewController(initialVC)
         }
         
         handleUserStatus()
