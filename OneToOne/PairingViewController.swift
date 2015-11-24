@@ -21,31 +21,14 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         
         let user = PFUser.currentUser()
         
-        // Not getting downloaded before label loads ** fix this **
-        if enteredCode == "" && user != nil {
-            let query = PFQuery(className:"AccountCode")
-            query.whereKey("code", equalTo:(user!["code"])) // The code they signed up with is stored with the user
-            query.findObjectsInBackgroundWithBlock {
-                (objects: [PFObject]?, error: NSError?) -> Void in
-                
-                if error == nil {
-                    // Found a code
-                    if objects!.count == 1 {
-                        // Existing code entry
-                        let code = objects!.first
-                        self.enteredCode = code!["code"] as! String
-                    }
-                }
-            }
-        }
-        
-        
         var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
 
-        /*
-        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."*/
-        
         if user != nil {
+            
+            if enteredCode == "" {
+                enteredCode = user!["code"] as! String
+            }
+            
             attemptToPair(user!) { (result, userStatus) -> Void in
                 if result {
                     switch userStatus {
@@ -59,6 +42,9 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 }
             }
         }
+        
+        //instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
+
     }
     
     func update() {
@@ -94,14 +80,22 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         loginViewController.view.frame = self.view.bounds
         self.view.addSubview(loginViewController.view)
         loginViewController.didMoveToParentViewController(self)
-        //self.performSegueWithIdentifier("loginSegue", sender: self)
+
+        /*
+        self.transitionFromViewController(self, toViewController: loginViewController, duration: 0.2, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
+            
+            }) { (success) -> Void in
+                //self.removeFromParentViewController()
+                loginViewController.didMoveToParentViewController(self)
+                loginViewController.view.frame = self.view.bounds
+        }*/
     }
     @IBAction func didPressSendMessage(sender: AnyObject) {
         if MFMessageComposeViewController.canSendText() {
             let messageVC = MFMessageComposeViewController()
             messageVC.messageComposeDelegate = self
-            messageVC.recipients = ["Enter tel-nr"]
-            messageVC.body = "Download 1:1 (url) and enter code '\(enteredCode)' to  pair with me!"
+            //messageVC.recipients = ["Enter tel-nr"]
+            messageVC.body = "Download 1:1 from the App Store and enter code '\(enteredCode)' to pair with me!"
             self.presentViewController(messageVC, animated: true, completion: nil)
         } else {
             print("User hasn't setup Messages.app")

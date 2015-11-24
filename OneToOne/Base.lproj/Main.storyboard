@@ -102,18 +102,19 @@
                             <constraint firstAttribute="trailingMargin" secondItem="Fh8-Pl-zcW" secondAttribute="trailing" id="ZWb-sV-v6q"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="eEy-sY-cjP"/>
                     <connections>
                         <outlet property="PairingTextParentView" destination="Fh8-Pl-zcW" id="6PQ-J7-Mjj"/>
                         <outlet property="nextButton" destination="dQo-ia-2IV" id="biO-j2-cpq"/>
                         <outlet property="pairingIndicator" destination="3Ix-zp-uzt" id="Flv-Qi-NCo"/>
                         <outlet property="textField" destination="gVx-u4-Oft" id="snj-P1-bBu"/>
-                        <segue destination="idb-7w-007" kind="presentation" identifier="pairingSegue" modalTransitionStyle="crossDissolve" id="eEi-bb-dvD"/>
                         <segue destination="dK9-Td-VYL" kind="presentation" identifier="cameraSegue" id="igW-Ls-xGo"/>
+                        <segue destination="idb-7w-007" kind="presentation" identifier="pairingSegue" animates="NO" id="sOo-pe-a25"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="319" y="422.99999999999994"/>
+            <point key="canvasLocation" x="1131" y="422"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="XFA-hS-9g7">
@@ -124,16 +125,15 @@
                         <viewControllerLayoutGuide type="bottom" id="rhC-14-tGf"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uly-V9-c1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwH-38-Tt9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1887.1875" y="422.00704225352109"/>
+            <point key="canvasLocation" x="2938" y="404"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="SFE-ge-AFn">
@@ -182,10 +182,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-Jp-yhM">
+                                <rect key="frame" x="20" y="20" width="56" height="34"/>
+                                <animations/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="0.38651725650000002" green="0.85240232940000005" blue="0.74656403059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didPressCancel:" destination="idb-7w-007" eventType="touchUpInside" id="AG2-he-eOh"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y0r-4B-AOj" userLabel="WaitingText">
                                 <rect key="frame" x="0.0" y="158" width="310" height="194"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wQ-99-o4v">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wQ-99-o4v">
                                         <rect key="frame" x="0.0" y="127" width="120" height="34"/>
                                         <animations/>
                                         <state key="normal" title="Send Message">
@@ -214,20 +224,11 @@
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="weS-0q-RTM" firstAttribute="leading" secondItem="y0r-4B-AOj" secondAttribute="leading" id="Lx4-vE-BB5"/>
+                                    <constraint firstItem="4wQ-99-o4v" firstAttribute="top" secondItem="weS-0q-RTM" secondAttribute="bottom" constant="18" id="QmE-Rq-ldj"/>
                                     <constraint firstAttribute="trailing" secondItem="weS-0q-RTM" secondAttribute="trailing" id="YhJ-62-s9F"/>
                                     <constraint firstItem="weS-0q-RTM" firstAttribute="top" secondItem="Ovh-Xw-9tf" secondAttribute="bottom" constant="18" id="r73-rn-Y1o"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-Jp-yhM">
-                                <rect key="frame" x="20" y="20" width="56" height="34"/>
-                                <animations/>
-                                <state key="normal" title="Cancel">
-                                    <color key="titleColor" red="0.38651725650000002" green="0.85240232940000005" blue="0.74656403059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="didPressCancel:" destination="idb-7w-007" eventType="touchUpInside" id="AG2-he-eOh"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <animations/>
                         <constraints>
@@ -237,13 +238,14 @@
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="centerX" secondItem="INj-vn-3Yo" secondAttribute="centerX" id="rXS-fM-9sn"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1103" y="422"/>
+            <point key="canvasLocation" x="2141" y="404"/>
         </scene>
     </scenes>
 </document>
