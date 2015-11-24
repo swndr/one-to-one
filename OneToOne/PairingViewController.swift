@@ -8,17 +8,21 @@
 
 import UIKit
 import Parse
+import MessageUI
 
-class PairingViewController: UIViewController {
+class PairingViewController: UIViewController, MFMessageComposeViewControllerDelegate{
 
     var enteredCode = ""
     @IBOutlet weak var instructionLabel: UILabel!
+    var count = 1000
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let user = PFUser.currentUser()
         
+        var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
+
         if user != nil {
             
             if enteredCode == "" {
@@ -39,8 +43,20 @@ class PairingViewController: UIViewController {
             }
         }
         
-        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
+        //instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
 
+    }
+    
+    func update() {
+        let timeLeft = String(format:"%02d:%02d", (count/100)%6000, count%100)
+        
+        if(count > 0)
+        {
+            count--
+            instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."
+            
+        }
+        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -74,5 +90,26 @@ class PairingViewController: UIViewController {
                 loginViewController.view.frame = self.view.bounds
         }*/
     }
+    @IBAction func didPressSendMessage(sender: AnyObject) {
+        if MFMessageComposeViewController.canSendText() {
+            let messageVC = MFMessageComposeViewController()
+            messageVC.messageComposeDelegate = self
+            //messageVC.recipients = ["Enter tel-nr"]
+            messageVC.body = "Download 1:1 from the App Store and enter code '\(enteredCode)' to pair with me!"
+            self.presentViewController(messageVC, animated: true, completion: nil)
+        } else {
+            print("User hasn't setup Messages.app")
+        }
+        
+    }
+    
+    
+    func messageComposeViewController(controller: MFMessageComposeViewController!, didFinishWithResult result: MessageComposeResult) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 
 }
+
+
+
