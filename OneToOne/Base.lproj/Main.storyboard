@@ -102,18 +102,19 @@
                             <constraint firstAttribute="trailingMargin" secondItem="Fh8-Pl-zcW" secondAttribute="trailing" id="ZWb-sV-v6q"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="eEy-sY-cjP"/>
                     <connections>
                         <outlet property="PairingTextParentView" destination="Fh8-Pl-zcW" id="6PQ-J7-Mjj"/>
                         <outlet property="nextButton" destination="dQo-ia-2IV" id="biO-j2-cpq"/>
                         <outlet property="pairingIndicator" destination="3Ix-zp-uzt" id="Flv-Qi-NCo"/>
                         <outlet property="textField" destination="gVx-u4-Oft" id="snj-P1-bBu"/>
-                        <segue destination="idb-7w-007" kind="presentation" identifier="pairingSegue" modalTransitionStyle="crossDissolve" id="eEi-bb-dvD"/>
                         <segue destination="dK9-Td-VYL" kind="presentation" identifier="cameraSegue" id="igW-Ls-xGo"/>
+                        <segue destination="idb-7w-007" kind="presentation" identifier="pairingSegue" animates="NO" id="sOo-pe-a25"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="319" y="422.99999999999994"/>
+            <point key="canvasLocation" x="1131" y="422"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="XFA-hS-9g7">
@@ -124,16 +125,15 @@
                         <viewControllerLayoutGuide type="bottom" id="rhC-14-tGf"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="uly-V9-c1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwH-38-Tt9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1887.1875" y="422.00704225352109"/>
+            <point key="canvasLocation" x="2938" y="404"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="SFE-ge-AFn">
@@ -229,13 +229,14 @@
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="centerX" secondItem="INj-vn-3Yo" secondAttribute="centerX" id="rXS-fM-9sn"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1103" y="422"/>
+            <point key="canvasLocation" x="2141" y="404"/>
         </scene>
     </scenes>
 </document>

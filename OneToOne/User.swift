@@ -169,7 +169,41 @@ func createUser(codeObject: PFObject, completion: (result: Bool) -> Void) {
             // Associate the device with a user (will this work if they declined notifications?)
             let installation = PFInstallation.currentInstallation()
             installation["user"] = newUser!
-            installation.saveInBackground()
+            installation.saveInBackgroundWithBlock({ (success:Bool, error:NSError?) -> Void in
+                if let error = error {
+                    let errorString = error.userInfo["error"] as? NSString
+                    print(errorString)
+                } else {
+                    // Get recipient to notify ** not working yet **
+                    let recipient: PFUser?
+                    let query:PFQuery = PFUser.query()!
+                    query.whereKey("username", equalTo:codeObject["creator"])
+                    do {
+                        recipient = try query.getFirstObject() as? PFUser
+                        print(recipient)
+                    } catch _ {
+                        recipient = nil
+                        print(recipient)
+                    }
+                    
+                    if recipient != nil {
+                        // Create our Installation query
+                        let pushQuery = PFInstallation.query()
+                        pushQuery!.whereKey("user", equalTo: recipient!)
+                        
+                        let data = [
+                            "alert" : "You're paired, now you can start sending photos!",
+                            "event" : "paired"
+                        ]
+                        
+                        // Send push notification to query
+                        let push = PFPush()
+                        push.setQuery(pushQuery) // Set our Installation query
+                        push.setData(data)
+                        push.sendPushInBackground()
+                    }
+                }
+            })
             
             completion(result: true)
         }
@@ -290,39 +324,10 @@ func attemptToPair(currentUser: PFUser, completion: (result:Bool, userStatus:Use
                     currentUser.saveInBackground()
                     status = .Paired
                     
-                    // Get recipient to notify ** not working yet **
-                    let recipient: PFUser?
-                    var query:PFQuery = PFUser.query()!
-                    query.whereKey("username", equalTo:codeObject!["creator"])
-                    do {
-                        recipient = try query.getFirstObject() as? PFUser
-                        print(recipient)
-                    } catch _ {
-                        recipient = nil
-                    }
-
-                    if recipient != nil {
-                        // Create our Installation query
-                        let pushQuery = PFInstallation.query()
-                        pushQuery!.whereKey("user", equalTo: recipient!)
-                        
-                        let data = [
-                            "alert" : "You're paired, now you can start sending photos!",
-                            "event" : "paired"
-                        ]
-                        
-                        // Send push notification to query
-                        let push = PFPush()
-                        push.setQuery(pushQuery) // Set our Installation query
-                        push.setData(data)
-                        push.sendPushInBackground()
-                    }
-                    
                     // Now delete the code so it can be reused
                     codeObject!.deleteInBackground() 
                 }
                 querySuccess = true
-                completion(result: true, userStatus: status)
             }
         } else {
                 // Log details of the failure
