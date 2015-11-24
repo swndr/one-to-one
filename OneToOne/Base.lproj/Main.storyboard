@@ -192,14 +192,14 @@
                                             <color key="titleColor" red="0.38651725650000002" green="0.85240232940000005" blue="0.74656403059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Waiting to pair..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-Xw-9tf">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Waiting to pair..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-Xw-9tf">
                                         <rect key="frame" x="0.0" y="23" width="311" height="22"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tell the recipient to enter Seabiscuit within the next 10:00 to pair." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="weS-0q-RTM">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Tell the recipient to enter Seabiscuit within the next 10:00 to pair." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="weS-0q-RTM">
                                         <rect key="frame" x="0.0" y="63" width="311" height="46"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -209,6 +209,11 @@
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="weS-0q-RTM" firstAttribute="leading" secondItem="y0r-4B-AOj" secondAttribute="leading" id="Lx4-vE-BB5"/>
+                                    <constraint firstAttribute="trailing" secondItem="weS-0q-RTM" secondAttribute="trailing" id="YhJ-62-s9F"/>
+                                    <constraint firstItem="weS-0q-RTM" firstAttribute="top" secondItem="Ovh-Xw-9tf" secondAttribute="bottom" constant="18" id="r73-rn-Y1o"/>
+                                </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-Jp-yhM">
                                 <rect key="frame" x="20" y="20" width="56" height="34"/>
