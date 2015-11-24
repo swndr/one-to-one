@@ -14,6 +14,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
 
     var enteredCode = ""
     @IBOutlet weak var instructionLabel: UILabel!
+    var count = 1000
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,11 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
             }
         }
         
-        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
+        
+        var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
+
+        /*
+        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."*/
         
         if user != nil {
             attemptToPair(user!) { (result, userStatus) -> Void in
@@ -54,6 +59,18 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 }
             }
         }
+    }
+    
+    func update() {
+        let timeLeft = String(format:"%02d:%02d", (count/100)%6000, count%100)
+        
+        if(count > 0)
+        {
+            count--
+            instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."
+            
+        }
+        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
