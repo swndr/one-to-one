@@ -8,8 +8,9 @@
 
 import UIKit
 import Parse
+import MessageUI
 
-class PairingViewController: UIViewController {
+class PairingViewController: UIViewController, MFMessageComposeViewControllerDelegate{
 
     var enteredCode = ""
     @IBOutlet weak var instructionLabel: UILabel!
@@ -78,5 +79,26 @@ class PairingViewController: UIViewController {
         loginViewController.didMoveToParentViewController(self)
         //self.performSegueWithIdentifier("loginSegue", sender: self)
     }
+    @IBAction func didPressSendMessage(sender: AnyObject) {
+        if MFMessageComposeViewController.canSendText() {
+            let messageVC = MFMessageComposeViewController()
+            messageVC.messageComposeDelegate = self
+            messageVC.recipients = ["Enter tel-nr"]
+            messageVC.body = "Download 1:1 (url) and enter code '\(enteredCode)' to  pair with me!"
+            self.presentViewController(messageVC, animated: true, completion: nil)
+        } else {
+            print("User hasn't setup Messages.app")
+        }
+        
+    }
+    
+    
+    func messageComposeViewController(controller: MFMessageComposeViewController!, didFinishWithResult result: MessageComposeResult) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 
 }
+
+
+
