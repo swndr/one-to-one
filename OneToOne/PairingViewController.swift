@@ -19,27 +19,12 @@ class PairingViewController: UIViewController {
         
         let user = PFUser.currentUser()
         
-        // Not getting downloaded before label loads ** fix this **
-        if enteredCode == "" && user != nil {
-            let query = PFQuery(className:"AccountCode")
-            query.whereKey("code", equalTo:(user!["code"])) // The code they signed up with is stored with the user
-            query.findObjectsInBackgroundWithBlock {
-                (objects: [PFObject]?, error: NSError?) -> Void in
-                
-                if error == nil {
-                    // Found a code
-                    if objects!.count == 1 {
-                        // Existing code entry
-                        let code = objects!.first
-                        self.enteredCode = code!["code"] as! String
-                    }
-                }
-            }
-        }
-        
-        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
-        
         if user != nil {
+            
+            if enteredCode == "" {
+                enteredCode = user!["code"] as! String
+            }
+            
             attemptToPair(user!) { (result, userStatus) -> Void in
                 if result {
                     switch userStatus {
@@ -53,6 +38,9 @@ class PairingViewController: UIViewController {
                 }
             }
         }
+        
+        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
+
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -76,7 +64,15 @@ class PairingViewController: UIViewController {
         loginViewController.view.frame = self.view.bounds
         self.view.addSubview(loginViewController.view)
         loginViewController.didMoveToParentViewController(self)
-        //self.performSegueWithIdentifier("loginSegue", sender: self)
+
+        /*
+        self.transitionFromViewController(self, toViewController: loginViewController, duration: 0.2, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
+            
+            }) { (success) -> Void in
+                //self.removeFromParentViewController()
+                loginViewController.didMoveToParentViewController(self)
+                loginViewController.view.frame = self.view.bounds
+        }*/
     }
 
 }
