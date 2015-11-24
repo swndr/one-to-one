@@ -89,6 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if application.applicationState == UIApplicationState.Inactive {
             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
+        print(userInfo)
     }
 
     func applicationWillResignActive(application: UIApplication) {

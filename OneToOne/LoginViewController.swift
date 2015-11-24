@@ -26,11 +26,16 @@ class LoginViewController: UIViewController {
         if user == nil {
             // Create anonymous user
             createAnonUser()
-        } else {
+        } else if user!["recipient"] as? String == "pending" {
             print("Found existing user")
             // This user cancelled from pairing, or had an expired code ** not completely sure about this logic! **
-            if user!["recipient"] as! String == "pending" {
-                returningFromPairing = true
+            returningFromPairing = true
+            deleteCode(user!) { (result) -> Void in
+                if result {
+                    // Query succeeded, may or may not have had to delete a code
+                } else {
+                    // Querying code failed, should we retry?
+                }
             }
         }
         

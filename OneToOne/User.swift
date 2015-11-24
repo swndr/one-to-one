@@ -180,38 +180,30 @@ func createUser(codeObject: PFObject, completion: (result: Bool) -> Void) {
 func renewCode(enteredCode: String, completion: (result: Bool) -> Void) {
     
     let existingUser = PFUser.currentUser()
+
+    // Set new details
+    existingUser!["recipient"] = "pending"
+    existingUser!["code"] = enteredCode // Store the code with user
     
-    deleteCode(existingUser!) { (result) -> Void in
-        if result {
-            // Query succeeded, may or may not have had to delete a code
-          
-            // Set new details
-            existingUser!["recipient"] = "pending"
-            existingUser!["code"] = enteredCode // Store the code with user
-            
-            existingUser!.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
-                if let error = error {
-                    let errorString = error.userInfo["error"] as? NSString
-                    print(errorString)
-                } else {
-                    let accountCode = PFObject(className:"AccountCode")
-                    accountCode["code"] = enteredCode
-                    accountCode["used"] = false
-                    accountCode["creator"] = existingUser!["username"] // Person who created code
-                    accountCode["receiver"] = "pending" // No receiver yet
-                    
-                    // Permissions...
-                    let acl = PFACL()
-                    acl.setPublicReadAccess(true)
-                    acl.setPublicWriteAccess(true) // So next person can be added as recipient
-                    accountCode.ACL = acl
-                    accountCode.saveInBackground()
-                    
-                    completion(result: true)
-                }
-            }
+    existingUser!.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        if let error = error {
+            let errorString = error.userInfo["error"] as? NSString
+            print(errorString)
         } else {
-            // Querying code failed, should we retry?
+            let accountCode = PFObject(className:"AccountCode")
+            accountCode["code"] = enteredCode
+            accountCode["used"] = false
+            accountCode["creator"] = existingUser!["username"] // Person who created code
+            accountCode["receiver"] = "pending" // No receiver yet
+            
+            // Permissions...
+            let acl = PFACL()
+            acl.setPublicReadAccess(true)
+            acl.setPublicWriteAccess(true) // So next person can be added as recipient
+            accountCode.ACL = acl
+            accountCode.saveInBackground()
+            
+            completion(result: true)
         }
     }
 }
@@ -276,7 +268,7 @@ func deleteCode(currentUser: PFUser, completion: (result:Bool) -> Void) {
 func attemptToPair(currentUser: PFUser, completion: (result:Bool, userStatus:UserStatus) -> Void) {
     
     var querySuccess = false
-    var status = UserStatus()
+    var status = UserStatus.Unpaired
     
     let query = PFQuery(className:"AccountCode")
     query.whereKey("code", equalTo:(currentUser["code"])) // The code they signed up with is stored with the user
@@ -297,24 +289,32 @@ func attemptToPair(currentUser: PFUser, completion: (result:Bool, userStatus:Use
                     currentUser["recipient"] = codeObject!["receiver"]
                     currentUser.saveInBackground()
                     status = .Paired
-
-                    // Get recipient to notify
+                    
+                    // Get recipient to notify ** not working yet **
                     let recipient: PFUser?
+                    var query:PFQuery = PFUser.query()!
+                    query.whereKey("username", equalTo:codeObject!["creator"])
                     do {
-                        recipient = try PFQuery.getUserObjectWithId(codeObject!["receiver"] as! String)
+                        recipient = try query.getFirstObject() as? PFUser
+                        print(recipient)
                     } catch _ {
                         recipient = nil
                     }
-                    
+
                     if recipient != nil {
                         // Create our Installation query
                         let pushQuery = PFInstallation.query()
                         pushQuery!.whereKey("user", equalTo: recipient!)
                         
+                        let data = [
+                            "alert" : "You're paired, now you can start sending photos!",
+                            "event" : "paired"
+                        ]
+                        
                         // Send push notification to query
                         let push = PFPush()
                         push.setQuery(pushQuery) // Set our Installation query
-                        push.setMessage("You're paired, now you can start sending photos!")
+                        push.setData(data)
                         push.sendPushInBackground()
                     }
                     
@@ -323,11 +323,11 @@ func attemptToPair(currentUser: PFUser, completion: (result:Bool, userStatus:Use
                 }
                 querySuccess = true
                 completion(result: true, userStatus: status)
-            } else {
+            }
+        } else {
                 // Log details of the failure
                 print("Error: \(error!) \(error!.userInfo)")
                 querySuccess = false
-            }
         }
         completion(result: querySuccess, userStatus: status)
     }

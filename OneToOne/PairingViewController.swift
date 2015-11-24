@@ -12,11 +12,32 @@ import Parse
 class PairingViewController: UIViewController {
 
     var enteredCode = ""
+    @IBOutlet weak var instructionLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         let user = PFUser.currentUser()
+        
+        // Not getting downloaded before label loads ** fix this **
+        if enteredCode == "" && user != nil {
+            let query = PFQuery(className:"AccountCode")
+            query.whereKey("code", equalTo:(user!["code"])) // The code they signed up with is stored with the user
+            query.findObjectsInBackgroundWithBlock {
+                (objects: [PFObject]?, error: NSError?) -> Void in
+                
+                if error == nil {
+                    // Found a code
+                    if objects!.count == 1 {
+                        // Existing code entry
+                        let code = objects!.first
+                        self.enteredCode = code!["code"] as! String
+                    }
+                }
+            }
+        }
+        
+        instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
         
         if user != nil {
             attemptToPair(user!) { (result, userStatus) -> Void in
@@ -27,7 +48,7 @@ class PairingViewController: UIViewController {
                         // Go to camera screen
                         self.performSegueWithIdentifier("cameraSegue", sender: self)
                     default:
-                        print("Still not paired")
+                        print("Still not paired") // Getting called twice ** investigate
                     }
                 }
             }
@@ -48,7 +69,14 @@ class PairingViewController: UIViewController {
     
     @IBAction func didPressCancel(sender: AnyObject) {
         // Go to login screen ** maybe need to figure appropriate animation for this? **
-        self.performSegueWithIdentifier("loginSegue", sender: self)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        var loginViewController: UIViewController!
+        loginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
+        self.addChildViewController(loginViewController)
+        loginViewController.view.frame = self.view.bounds
+        self.view.addSubview(loginViewController.view)
+        loginViewController.didMoveToParentViewController(self)
+        //self.performSegueWithIdentifier("loginSegue", sender: self)
     }
 
 }

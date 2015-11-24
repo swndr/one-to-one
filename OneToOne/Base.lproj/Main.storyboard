@@ -229,6 +229,9 @@
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="centerX" secondItem="INj-vn-3Yo" secondAttribute="centerX" id="rXS-fM-9sn"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
