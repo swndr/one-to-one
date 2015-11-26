@@ -18,6 +18,10 @@ class ReceivedImage: UIImageView {
         objectID = id
     }
     
+    func setImageForView(data: NSData) {
+        self.image = UIImage(data: data)
+    }
+    
     // Remove image from Parse
     func deleteSeenPhoto(id: String) {
         let query = PFQuery(className:"SentPhoto")
