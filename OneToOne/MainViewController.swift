@@ -18,17 +18,6 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        
-//        loginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginViewController")
-//        pairingViewController = storyboard.instantiateViewControllerWithIdentifier("PairingViewController")
-//        cameraViewController = storyboard.instantiateViewControllerWithIdentifier("CameraViewController")
-//
-//        self.addChildViewController(loginViewController)
-//        loginViewController.view.frame = self.view.bounds
-//        self.view.addSubview(loginViewController.view)
-//        loginViewController.didMoveToParentViewController(self)
     }
 
     override func didReceiveMemoryWarning() {
