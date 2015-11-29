@@ -48,14 +48,34 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     func update() {
+        /*
+        var totalTime = 600 // 60 seconds * 10
+        var timeElapsed = NSDate().timeIntervalSinceDate((codeObject.createdAt)!)
+
+        let interval = totalTime - timeElapsed
+        let componentFormatter = NSDateComponentsFormatter()
+        
+        componentFormatter.unitsStyle = .Positional
+        componentFormatter.zeroFormattingBehavior = .DropAll
+        
+        if let formattedString = componentFormatter.stringFromDateComponents(<#T##components: NSDateComponents##NSDateComponents#>) {
+        print(formattedString) // x:xx
+        }
+        //returns in seconds
+        */
+
         let timeLeft = String(format:"%02d:%02d", (count/100)%6000, count%100)
+        
+        //timeLeft.font = UIFont.monospacedDigitSystemFontOfSize(17, weight: UIFontWeightRegular)
+
+        
         
         if(count > 0)
         {
             count--
             instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."
-            
         }
+        
         
     }
     
