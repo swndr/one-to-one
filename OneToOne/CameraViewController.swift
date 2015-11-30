@@ -280,71 +280,90 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 self.displayReceivedPhotos()
             }
         }
-        
     }
     
     func getNewPhotos(completion: (Bool -> Void)) {
         
-        let query = PFQuery(className:"Photo")
-        query.whereKey("recipient", equalTo:user!["username"])
-        query.whereKey("viewed", equalTo:NSNumber(bool: false)) // not viewed yet
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            
-            if error == nil {
-                // The find succeeded
-
-                print("Successfully retrieved \(objects!.count) photos.")
-                // Total to track download completion
-                var totalPercentDone:Int32 = 100 * Int32(objects!.count)
+        var newImages: [PFObject] = []
+        
+        func getObjects(completion: (Bool -> Void)) {
+            let query = PFQuery(className:"Photo")
+            query.whereKey("recipient", equalTo:user!["username"])
+            query.whereKey("viewed", equalTo:NSNumber(bool: false)) // not viewed yet
+            query.findObjectsInBackgroundWithBlock {
+                (objects: [PFObject]?, error: NSError?) -> Void in
                 
-                if let objects = objects! as? [PFObject] {
-                    for object in objects {
-                        // Check not already in array of downloaded images
-                        if !self.receivedImages.contains({$0.objectID == object.objectId!}) {
-                            let imageFile = object["imageFile"]
-                            if imageFile != nil {
-                                imageFile!.getDataInBackgroundWithBlock({ (data, error) -> Void in
-                                    if error == nil {
-                                        // Calculate size for display
-                                        let screenSize = UIScreen.mainScreen().bounds.size
-                                        let cameraAspectRatio: CGFloat = 4.0 / 3.0
-                                        let imageWidth = screenSize.width
-                                        let imageHeight = floor(screenSize.width * cameraAspectRatio)
-                                        
-                                        // Set received image and id
-                                        let receivedImage = ReceivedImage(frame:CGRect(x:0,y:0,width:imageWidth,height:imageHeight))
-                                        receivedImage.setImageForView(data!)
-                                        receivedImage.storeObjectID(object.objectId!)
-                                        receivedImage.storeCreatedDate(object.createdAt!)
-                                        print("ID: \(receivedImage.objectID)")
-                                        
-                                        receivedImage.userInteractionEnabled = true
-                                        
-                                        // Add to array so can display later
-                                        self.receivedImages.append(receivedImage)
-                                        }
-                                    }, progressBlock: { (percentDone: Int32) -> Void in
-                                        // THIS STUFF NEEDS SOME WORK
-                                        if percentDone == 100 {
-                                          totalPercentDone -= percentDone
-                                        }
-                                        print("Progress: \(percentDone)")
-                                        print("Total progress remaining: \(totalPercentDone)")
-                                        if totalPercentDone == 0 {
-                                            // There must be a better way!
-                                            delay(2.0, closure: { () -> () in
-                                                completion(true)
-                                            })
-                                        }
-                                })
+                if error == nil {
+                    // The find succeeded
+                    if let objects = objects! as? [PFObject] {
+                        for object in objects {
+                            // Check not already in array of downloaded images
+                            if !self.receivedImages.contains({$0.objectID == object.objectId!}) {
+                                newImages.append(object) // add to array
+                                print(newImages)
+                            }
+                            if object == objects.last {
+                                completion(true)
+                                print(newImages)
                             }
                         }
                     }
+                } else {
+                    // Log details of the failure
+                    print("Error: \(error!) \(error!.userInfo)")
                 }
-            } else {
-            // Log details of the failure
-            print("Error: \(error!) \(error!.userInfo)")
+            }
+        }
+        
+        // Get new images then add to receivedImages array
+        getObjects { (done) -> Void in
+            if done {
+                print("Successfully retrieved \(newImages.count) photos.")
+                // Total to track download completion
+                //var totalPercentDone:Int32 = 100 * Int32(newImages.count)
+                for object in newImages {
+                    let imageFile = object["imageFile"]
+                    if imageFile != nil {
+                        imageFile!.getDataInBackgroundWithBlock({ (data, error) -> Void in
+                            if error == nil {
+                                // Calculate size for display
+                                let screenSize = UIScreen.mainScreen().bounds.size
+                                let cameraAspectRatio: CGFloat = 4.0 / 3.0
+                                let imageWidth = screenSize.width
+                                let imageHeight = floor(screenSize.width * cameraAspectRatio)
+                                
+                                // Set received image and id
+                                let receivedImage = ReceivedImage(frame:CGRect(x:0,y:0,width:imageWidth,height:imageHeight))
+                                receivedImage.setImageForView(data!)
+                                receivedImage.storeObjectID(object.objectId!)
+                                receivedImage.storeCreatedDate(object.createdAt!)
+                                print("ID: \(receivedImage.objectID)")
+                                
+                                receivedImage.userInteractionEnabled = true
+                                
+                                // Add to array so can display later
+                                self.receivedImages.append(receivedImage)
+                            }
+                        }, progressBlock: { (percentDone: Int32) -> Void in
+                            
+                            print("Progress: \(percentDone)")
+                            if object == newImages.last && percentDone == 100 {
+                                
+                                func checkCompletion() {
+                                    if self.receivedImages.count == newImages.count {
+                                        completion(true)
+                                    } else {
+                                        delay(0.2, closure: { () -> () in
+                                            print("Still waiting...")
+                                            checkCompletion()
+                                        })
+                                    }
+                                }
+                                checkCompletion()
+                            }
+                        })
+                    }
+                }
             }
         }
     }

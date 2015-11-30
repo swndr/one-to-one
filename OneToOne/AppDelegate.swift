@@ -100,6 +100,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if userInfo["event"] as! String == "photo" {
             // If photo notif, post notification to center
             NSNotificationCenter.defaultCenter().postNotificationName("newPhoto", object: nil, userInfo: userInfo as [NSObject : AnyObject])
+        } else if userInfo["event"] as! String == "paired" {
+            // If pairing notif, post notification to center
+            NSNotificationCenter.defaultCenter().postNotificationName("justPaired", object: nil, userInfo: userInfo as [NSObject : AnyObject])
         }
     }
 
