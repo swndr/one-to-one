@@ -11,10 +11,13 @@ import Parse
 import MessageUI
 
 class PairingViewController: UIViewController, MFMessageComposeViewControllerDelegate{
-
+    
     var enteredCode = ""
     @IBOutlet weak var instructionLabel: UILabel!
     var count = 1000
+    
+    //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +25,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         let user = PFUser.currentUser()
         
         var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
-
+        
         if user != nil {
             
             if enteredCode == "" {
@@ -42,40 +45,28 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 }
             }
         }
-        
-        //instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
-
     }
     
     func update() {
-        /*
-        var totalTime = 600 // 60 seconds * 10
-        var timeElapsed = NSDate().timeIntervalSinceDate((codeObject.createdAt)!)
-
-        let interval = totalTime - timeElapsed
-        let componentFormatter = NSDateComponentsFormatter()
+        // Get time since code created
+        let elapsedTime = NSDate().timeIntervalSinceDate(timeCreated)
+        let duration = Int(elapsedTime)
+        let secondsRemaining = 600 - duration
         
-        componentFormatter.unitsStyle = .Positional
-        componentFormatter.zeroFormattingBehavior = .DropAll
+        // Convert int to mm:ss
+        let time = secondsRemaining
+        let minutes = (time / 60) % 60
+        let seconds = time % 60
+        let timeRemaining = String(format:"%02d:%02d", minutes, seconds)
         
-        if let formattedString = componentFormatter.stringFromDateComponents(<#T##components: NSDateComponents##NSDateComponents#>) {
-        print(formattedString) // x:xx
-        }
-        //returns in seconds
-        */
-
-        let timeLeft = String(format:"%02d:%02d", (count/100)%6000, count%100)
-        
-        //timeLeft.font = UIFont.monospacedDigitSystemFontOfSize(17, weight: UIFontWeightRegular)
-
-        
-        
-        if(count > 0)
+        // Update code + time remaining message
+        if(self.count > 0)
         {
-            count--
-            instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."
+            self.count--
+            instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeRemaining) to pair."
         }
         
+        //let timeLeft.font = UIFont.monospacedDigitSystemFontOfSize(17, weight: UIFontWeightRegular)
         
     }
     
@@ -86,7 +77,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
             }
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -95,7 +86,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         
         // Go to login screen
         if self.parentViewController == nil {
-        // We came from login, so can dismiss
+            // We came from login, so can dismiss
             self.dismissViewControllerAnimated(false, completion: nil)
         } else {
             // Pairing was initial VC
@@ -123,7 +114,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         } else {
             print("User hasn't setup Messages.app")
         }
-        
     }
     
     
@@ -131,7 +121,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-
+    
 }
 
 
