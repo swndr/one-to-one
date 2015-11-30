@@ -12,13 +12,12 @@ import MessageUI
 
 class PairingViewController: UIViewController, MFMessageComposeViewControllerDelegate{
     
-    var enteredCode = ""
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var sendMessageButton: UIButton!
+    var enteredCode = ""
     var elapsedTime = NSDate().timeIntervalSinceDate(timeCreated)
 
-    //var count = 1000
-        //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
+    //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
     
     
     override func viewDidLoad() {
@@ -66,8 +65,13 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
             self.elapsedTime++
             instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeRemaining) to pair."
         } else {
-            instructionLabel.text = "\(enteredCode) has expired. Please enter a new code."
-            sendMessageButton.hidden = true
+            let alertController = UIAlertController(title: "Expired Code", message: "Your code '\(enteredCode)' has expired. Please try again by creating a new code.", preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ** Close and return to LoginViewController
+            }
         }
         
         //let timeLeft.font = UIFont.monospacedDigitSystemFontOfSize(17, weight: UIFontWeightRegular)
