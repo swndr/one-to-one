@@ -49,6 +49,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     func update() {
+
         // Get time since code created
         let duration = Int(elapsedTime)
         let secondsRemaining = 600 - duration
@@ -58,6 +59,18 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         let minutes = (time / 60) % 60
         let seconds = time % 60
         let timeRemaining = String(format:"%02d:%02d", minutes, seconds)
+        
+        instructionLabel.font = UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightRegular)
+        
+        /* need to fix to bold \(enteredCode) and \(timeRemaining)
+        // font attributes
+        let codeAttributes = [ NSFontAttributeName: UIFont.boldSystemFontOfSize(18)]
+        let enteredCodeString = NSMutableAttributedString(string: "\(enteredCode)", attributes: codeAttributes)
+        
+        let digitAttributes = [NSFontAttributeName: UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightBold)]
+        let timeRemainingString = NSMutableAttributedString(string: "\(timeRemaining)", attributes: digitAttributes)
+        */
+
         
         // Update code + time remaining message
         if(elapsedTime < 600.00)
@@ -70,12 +83,9 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
             }
             alertController.addAction(OKAction)
             self.presentViewController(alertController, animated: true) {
-                // ** Close and return to LoginViewController
+                // ** Close and return to LoginViewController **fix
             }
         }
-        
-        //let timeLeft.font = UIFont.monospacedDigitSystemFontOfSize(17, weight: UIFontWeightRegular)
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
