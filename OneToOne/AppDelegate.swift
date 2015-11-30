@@ -97,6 +97,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
         print(userInfo)
+        if userInfo["event"] as! String == "photo" {
+            // If photo notif, post notification to center
+            NSNotificationCenter.defaultCenter().postNotificationName("newPhoto", object: nil, userInfo: userInfo as [NSObject : AnyObject])
+        }
     }
 
     func applicationWillResignActive(application: UIApplication) {

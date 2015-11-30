@@ -50,6 +50,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     // Current user
     let user = PFUser.currentUser()
     
+    // Tap gesture for opening received images
+    var tapPhoto: UITapGestureRecognizer = UITapGestureRecognizer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("Opened camera")
@@ -93,7 +96,16 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     override func viewDidAppear(animated: Bool) {
         // Fetch new photos
         // TODO: FIND WAY TO AUTOMATE / INITIATE REFRESHING
-        getNewPhotos()
+        
+        // Add notif observer (may need to remove too?)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "newPhoto", object: nil)
+
+        getNewPhotos { (ready) -> Void in
+            if ready {
+                self.receivedImages.sortInPlace({ $0.created.timeIntervalSince1970 > $1.created.timeIntervalSince1970 })
+                self.displayReceivedPhotos()
+            }
+        }
     }
     
     func loadCamera() {
@@ -257,7 +269,22 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     ///// RECEIVING PHOTOS /////
     
-    func getNewPhotos() {
+    func respondToNotif(userInfo:NSNotification) {
+    
+        print("Responding to notif")
+        // TODO: WORKING BUT NEW IMAGE ENDS UP UNDER OLD ONE AT MOMENT
+        
+        getNewPhotos { (ready) -> Void in
+            if ready {
+                self.receivedImages.sortInPlace({ $0.created.timeIntervalSince1970 > $1.created.timeIntervalSince1970 })
+                self.displayReceivedPhotos()
+            }
+        }
+        
+    }
+    
+    func getNewPhotos(completion: (Bool -> Void)) {
+        
         let query = PFQuery(className:"Photo")
         query.whereKey("recipient", equalTo:user!["username"])
         query.whereKey("viewed", equalTo:NSNumber(bool: false)) // not viewed yet
@@ -265,39 +292,53 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             (objects: [PFObject]?, error: NSError?) -> Void in
             
             if error == nil {
-                // The find succeeded.
+                // The find succeeded
+
                 print("Successfully retrieved \(objects!.count) photos.")
+                // Total to track download completion
+                var totalPercentDone:Int32 = 100 * Int32(objects!.count)
+                
                 if let objects = objects! as? [PFObject] {
                     for object in objects {
-                        let imageFile = object["imageFile"]
-                        if imageFile != nil {
-                            imageFile!.getDataInBackgroundWithBlock({ (data, error) -> Void in
-                                if error == nil {
-                                    // Calculate size for display
-                                    let screenSize = UIScreen.mainScreen().bounds.size
-                                    let cameraAspectRatio: CGFloat = 4.0 / 3.0
-                                    let imageWidth = screenSize.width
-                                    let imageHeight = floor(screenSize.width * cameraAspectRatio)
-                                    
-                                    // Set received image and id
-                                    let receivedImage = ReceivedImage(frame:CGRect(x:0,y:0,width:imageWidth,height:imageHeight))
-                                    receivedImage.setImageForView(data!)
-                                    receivedImage.storeObjectID(object.objectId!)
-                                    print(receivedImage.objectID)
-                                    
-                                    // TODO MARK IMAGES AS VIEWED?
-                                    // HOW DO WE STOP REPEAT DOWNLOADING?
-                                    
-                                    receivedImage.userInteractionEnabled = true
-                                    
-                                    // TODO ADD GESURE RECOGNIZERS
-                                    
-                                    // Add to array so can display later
-                                    self.receivedImages.append(receivedImage)
-                                    }
-                                }, progressBlock: { (percentDone: Int32) -> Void in
-                                    print("Progress: \(percentDone)")
-                            })
+                        // Check not already in array of downloaded images
+                        if !self.receivedImages.contains({$0.objectID == object.objectId!}) {
+                            let imageFile = object["imageFile"]
+                            if imageFile != nil {
+                                imageFile!.getDataInBackgroundWithBlock({ (data, error) -> Void in
+                                    if error == nil {
+                                        // Calculate size for display
+                                        let screenSize = UIScreen.mainScreen().bounds.size
+                                        let cameraAspectRatio: CGFloat = 4.0 / 3.0
+                                        let imageWidth = screenSize.width
+                                        let imageHeight = floor(screenSize.width * cameraAspectRatio)
+                                        
+                                        // Set received image and id
+                                        let receivedImage = ReceivedImage(frame:CGRect(x:0,y:0,width:imageWidth,height:imageHeight))
+                                        receivedImage.setImageForView(data!)
+                                        receivedImage.storeObjectID(object.objectId!)
+                                        receivedImage.storeCreatedDate(object.createdAt!)
+                                        print("ID: \(receivedImage.objectID)")
+                                        
+                                        receivedImage.userInteractionEnabled = true
+                                        
+                                        // Add to array so can display later
+                                        self.receivedImages.append(receivedImage)
+                                        }
+                                    }, progressBlock: { (percentDone: Int32) -> Void in
+                                        // THIS STUFF NEEDS SOME WORK
+                                        if percentDone == 100 {
+                                          totalPercentDone -= percentDone
+                                        }
+                                        print("Progress: \(percentDone)")
+                                        print("Total progress remaining: \(totalPercentDone)")
+                                        if totalPercentDone == 0 {
+                                            // There must be a better way!
+                                            delay(2.0, closure: { () -> () in
+                                                completion(true)
+                                            })
+                                        }
+                                })
+                            }
                         }
                     }
                 }
@@ -305,6 +346,71 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             // Log details of the failure
             print("Error: \(error!) \(error!.userInfo)")
             }
+        }
+    }
+    
+    func displayReceivedPhotos() {
+        
+        print("Displaying received photos")
+        print(receivedImages.count)
+        
+        //TEMP LOCATION FOR IMAGES
+        var tempY:CGFloat = 100
+        
+        for image in receivedImages {
+            print(image.displayed)
+            if image.displayed {
+                // Remove gesture recognizer from any older image
+                if image.gestureRecognizers?.count > 0 {
+                    image.removeGestureRecognizer(tapPhoto)
+                }
+            } else {
+                // Clip and shrink images, display in view
+                image.frame.origin.y += tempY
+                image.frame.size.height = ((image.frame.height/4.0) * 3.0)
+                image.layer.cornerRadius = image.frame.width/2
+                image.contentMode = .ScaleAspectFill
+                image.clipsToBounds = true
+                image.transform = CGAffineTransformMakeScale(0.2,0.2)
+                tempY += 50
+                image.setDisplayed()
+                self.view.addSubview(image)
+                
+                // Add gesture recognizer to top image
+                if image == receivedImages.last {
+                    tapPhoto = UITapGestureRecognizer(target: self, action: "didTapTopImage:")
+                    image.addGestureRecognizer(tapPhoto)
+                }
+            }
+        }
+    }
+    
+    func didTapTopImage(sender:UITapGestureRecognizer) {
+        
+        sender.view?.removeGestureRecognizer(tapPhoto)
+        
+        UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+            
+            if self.overlay.superview == nil {
+                // TODO: MAKE OVERLAY NICE
+                self.overlay.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)
+                self.overlay.backgroundColor = UIColor.blackColor()
+                self.overlay.alpha = 0
+                self.cameraPreview.addSubview(self.overlay)
+            }
+            self.overlay.alpha = 0.8
+            
+            // Loop through images, make them full size and not masked
+            for image in self.receivedImages {
+                if image.displayed {
+                    image.layer.cornerRadius = 0
+                    image.frame.size.height = ((image.frame.height/3.0) * 4.0)
+                    image.transform = CGAffineTransformMakeScale(1,1)
+                }
+            }
+
+            
+            }) { (finished) -> Void in
         }
     }
     
