@@ -14,9 +14,11 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     
     var enteredCode = ""
     @IBOutlet weak var instructionLabel: UILabel!
-    var count = 1000
-    
-    //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
+    @IBOutlet weak var sendMessageButton: UIButton!
+    var elapsedTime = NSDate().timeIntervalSinceDate(timeCreated)
+
+    //var count = 1000
+        //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
     
     
     override func viewDidLoad() {
@@ -49,7 +51,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     
     func update() {
         // Get time since code created
-        let elapsedTime = NSDate().timeIntervalSinceDate(timeCreated)
         let duration = Int(elapsedTime)
         let secondsRemaining = 600 - duration
         
@@ -60,10 +61,13 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         let timeRemaining = String(format:"%02d:%02d", minutes, seconds)
         
         // Update code + time remaining message
-        if(self.count > 0)
+        if(elapsedTime < 600.00)
         {
-            self.count--
+            self.elapsedTime++
             instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeRemaining) to pair."
+        } else {
+            instructionLabel.text = "\(enteredCode) has expired. Please enter a new code."
+            sendMessageButton.hidden = true
         }
         
         //let timeLeft.font = UIFont.monospacedDigitSystemFontOfSize(17, weight: UIFontWeightRegular)
