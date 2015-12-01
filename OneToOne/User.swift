@@ -242,6 +242,32 @@ func renewCode(enteredCode: String, completion: (result: Bool) -> Void) {
     }
 }
 
+// Get code created time as NSTimeInterval
+func getCodeCreatedTime(completion: (interval: NSTimeInterval, result:Bool) -> Void) {
+    
+    let currentUser = PFUser.currentUser()
+    
+    // Find their code and delete it first
+    let query = PFQuery(className:"AccountCode")
+    query.whereKey("code", equalTo:(currentUser!["code"])) // The code they signed up with is stored with the user
+    query.findObjectsInBackgroundWithBlock {
+        (objects: [PFObject]?, error: NSError?) -> Void in
+        
+        if error == nil {
+            // Found a code
+            if objects!.count == 1 {
+                // Existing code entry
+                let codeObject = objects!.first
+                let createdTimeInterval = NSDate().timeIntervalSinceDate((codeObject!.createdAt)!) // time since code created
+                completion(interval: createdTimeInterval, result: true)
+            }
+        } else {
+            // Log details of the failure
+            print("Error: \(error!) \(error!.userInfo)")
+        }
+    }
+}
+
 // Check when submit code, or while waiting to pair
 func hasCodeExpired(codeObject: PFObject) -> Bool {
 
