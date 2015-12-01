@@ -50,8 +50,16 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     // Current user
     let user = PFUser.currentUser()
     
+    // Tap gesture for taking photos
+    var tapCamera: UITapGestureRecognizer = UITapGestureRecognizer()
+    // Pan gesture for sending / discarding photo
+    var panPhoto: UIPanGestureRecognizer = UIPanGestureRecognizer()
     // Tap gesture for opening received images
     var tapPhoto: UITapGestureRecognizer = UITapGestureRecognizer()
+    // Pan gesture for thumbnail received photos
+    var panReceivedThumbnails: UIPanGestureRecognizer = UIPanGestureRecognizer()
+    // Pan gesture for saving / discarding received photos
+    var panReceivedPhoto: UIPanGestureRecognizer = UIPanGestureRecognizer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -157,7 +165,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
             cameraPreview = UIView(frame: CGRectMake(0.0, 0.0, view.bounds.size.width, view.bounds.size.height))
             cameraPreview.layer.addSublayer(previewLayer)
-            cameraPreview.addGestureRecognizer(UITapGestureRecognizer(target: self, action:"didTakePhoto:"))
+            tapCamera = UITapGestureRecognizer(target: self, action: "didTakePhoto:")
+            cameraPreview.addGestureRecognizer(tapCamera)
             cameraContainer.addSubview(cameraPreview)
         }
     }
@@ -168,7 +177,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection) {
                 (imageDataSampleBuffer, error) -> Void in
                 
-                self.cameraPreview.removeGestureRecognizer(sender)
+                self.cameraPreview.removeGestureRecognizer(self.tapCamera)
                 
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer)
                 
@@ -208,8 +217,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                         // Sending to global scope so buttons can reach this...
                         self.photoHolder = capturedPhoto
                         
-                        // TODO: ADD PAN GESTURE
-                        //capturedPhoto.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: "didPanPhoto:"))
+                        // Add pan gesture
+                        self.panPhoto = UIPanGestureRecognizer(target: self, action: "didPanPhoto:")
+                        self.photoHolder.addGestureRecognizer(self.panPhoto)
                 })
             }
         }
@@ -238,23 +248,31 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         }
     }
     
+    func didPanPhoto(sender:UIPanGestureRecognizer) {
+        // Decide if saving or discarding
+        
+    }
+    
     func discardPhoto(photoToDiscard:CapturedPhoto) {
         // TODO: MAKE THIS NICE
         photoToDiscard.removeFromSuperview()
         self.sendButton.alpha = 0
         self.cancelButton.alpha = 0
         self.overlay.alpha = 0
-        cameraPreview.addGestureRecognizer(UITapGestureRecognizer(target: self, action:"didTakePhoto:"))
+        cameraPreview.addGestureRecognizer(tapCamera)
     }
     
     @IBAction func didSendPhoto(sender: UIButton) {
+        // Save to camera roll
+        UIImageWriteToSavedPhotosAlbum(UIImage(data: photoHolder.imageData)!, nil, nil, nil)
+        
         // TODO: MAKE THIS NICE
         photoHolder.sendImage(photoHolder.imageData, recipientUsername: recipientUsername)
         photoHolder.removeFromSuperview()
         self.sendButton.alpha = 0
         self.cancelButton.alpha = 0
         self.overlay.alpha = 0
-        cameraPreview.addGestureRecognizer(UITapGestureRecognizer(target: self, action:"didTakePhoto:"))
+        cameraPreview.addGestureRecognizer(tapCamera)
     }
     
     @IBAction func didDiscardPhoto(sender: UIButton) {
@@ -380,6 +398,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             print(image.displayed)
             if image.displayed {
                 // Remove gesture recognizer from any older image
+                if image.gestureRecognizers?.count > 1 {
+                    image.removeGestureRecognizer(panReceivedThumbnails)
+                }
                 if image.gestureRecognizers?.count > 0 {
                     image.removeGestureRecognizer(tapPhoto)
                 }
@@ -397,8 +418,11 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 
                 // Add gesture recognizer to top image
                 if image == receivedImages.last {
+                    panReceivedThumbnails = UIPanGestureRecognizer(target: self, action: "didPanReceivedThumbnail:")
+                    image.addGestureRecognizer(panReceivedThumbnails)
                     tapPhoto = UITapGestureRecognizer(target: self, action: "didTapTopImage:")
                     image.addGestureRecognizer(tapPhoto)
+                    // MAY NEED TO WORK ON DISTINGUISHING GESTURES / PRIORITY
                 }
             }
         }
@@ -406,6 +430,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     func didTapTopImage(sender:UITapGestureRecognizer) {
         
+        sender.view?.removeGestureRecognizer(panReceivedThumbnails)
         sender.view?.removeGestureRecognizer(tapPhoto)
         
         UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
@@ -419,18 +444,29 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             }
             self.overlay.alpha = 0.8
             
+            self.panReceivedPhoto = UIPanGestureRecognizer(target: self, action: "didPanReceivedPhoto:")
+            
             // Loop through images, make them full size and not masked
             for image in self.receivedImages {
                 if image.displayed {
                     image.layer.cornerRadius = 0
                     image.frame.size.height = ((image.frame.height/3.0) * 4.0)
                     image.transform = CGAffineTransformMakeScale(1,1)
+                    image.addGestureRecognizer(self.panReceivedPhoto)
                 }
             }
 
-            
             }) { (finished) -> Void in
+                
         }
+    }
+    
+    func didPanReceivedThumbnail(sender:UIPanGestureRecognizer) {
+        // Chat heads behavior
+    }
+    
+    func didPanReceivedPhoto(sender:UIPanGestureRecognizer) {
+        // Decide whether to save or discard
     }
     
     override func didReceiveMemoryWarning() {

@@ -35,7 +35,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                     case .Paired:
                         print("Now paired")
                         // Go to camera screen
-                        self.performSegueWithIdentifier("cameraSegue", sender: self) // NOT WORKING YET
+                        self.performSegueWithIdentifier("pairingToCameraSegue", sender: self)
                     default:
                         print("Still not paired")
                     }
@@ -107,7 +107,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         
     }
     
-    func messageComposeViewController(controller: MFMessageComposeViewController!, didFinishWithResult result: MessageComposeResult) {
+    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -119,7 +119,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 case .Paired:
                     print("Now paired")
                     // Go to camera screen
-                    self.performSegueWithIdentifier("cameraSegue", sender: self) // NOT WORKING YET
+                    self.performSegueWithIdentifier("pairingToCameraSegue", sender: self)
                 default:
                     print("Still not paired")
                 }

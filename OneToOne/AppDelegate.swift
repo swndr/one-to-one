@@ -92,13 +92,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        PFPush.handlePush(userInfo)
+//        PFPush.handlePush(userInfo)
         if application.applicationState == UIApplicationState.Inactive {
             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
         print(userInfo)
         if userInfo["event"] as! String == "photo" {
             // If photo notif, post notification to center
+            PFPush.handlePush(userInfo)
             NSNotificationCenter.defaultCenter().postNotificationName("newPhoto", object: nil, userInfo: userInfo as [NSObject : AnyObject])
         } else if userInfo["event"] as! String == "paired" {
             // If pairing notif, post notification to center

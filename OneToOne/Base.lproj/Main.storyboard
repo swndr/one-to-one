@@ -285,11 +285,15 @@
                     <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
+                        <segue destination="dK9-Td-VYL" kind="presentation" identifier="pairingToCameraSegue" animates="NO" id="bnm-uG-T0h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2141" y="404"/>
+            <point key="canvasLocation" x="2077" y="404"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="bnm-uG-T0h"/>
+    </inferredMetricsTieBreakers>
 </document>
