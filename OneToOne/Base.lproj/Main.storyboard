@@ -284,11 +284,7 @@
                     <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
-<<<<<<< HEAD
-                        <outlet property="sendMessageButton" destination="4wQ-99-o4v" id="TXu-qA-9zs"/>
-=======
                         <segue destination="dK9-Td-VYL" kind="presentation" identifier="pairingToCameraSegue" animates="NO" id="bnm-uG-T0h"/>
->>>>>>> master
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
