@@ -14,12 +14,14 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var sendMessageButton: UIButton!
-    var enteredCode = ""    
+    var enteredCode = ""
     
     // Starting elapsed time at 0 so on first loading we can show 10:00 remaining
     var elapsedTime: NSTimeInterval = 0
     
     let user = PFUser.currentUser()
+    
+    //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +75,16 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         
         // Digits are monospaced
         instructionLabel.font = UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightRegular)
+        
+        /* need to fix to bold \(enteredCode) and \(timeRemaining)
+        // font attributes
+        let codeAttributes = [ NSFontAttributeName: UIFont.boldSystemFontOfSize(18)]
+        let enteredCodeString = NSMutableAttributedString(string: "\(enteredCode)", attributes: codeAttributes)
+        
+        let digitAttributes = [NSFontAttributeName: UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightBold)]
+        let timeRemainingString = NSMutableAttributedString(string: "\(timeRemaining)", attributes: digitAttributes)
+        */
+
 
         // Update code + time remaining message
         if(elapsedTime < 600.00)
