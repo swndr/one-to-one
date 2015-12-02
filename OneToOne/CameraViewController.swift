@@ -19,6 +19,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     var justPaired = false
     var recipientUsername = ""
+    // CREATE VARIABLE FOR TOP IMAGE CENTER
+    var topImageOriginalCenter: CGPoint!
     
     // Capture session
     let captureSession = AVCaptureSession()
@@ -462,7 +464,50 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     }
     
     func didPanReceivedThumbnail(sender:UIPanGestureRecognizer) {
-        // Chat heads behavior
+        let translation = sender.translationInView(view)
+        //let velocity = sender.velocityInView(view)
+        //let point = sender.locationInView(view)
+        //let topImage = sender.view
+        
+        if sender.state == UIGestureRecognizerState.Began {
+            topImageOriginalCenter = view.center
+
+        } else if sender.state == UIGestureRecognizerState.Changed {
+            view.center = CGPoint(x: topImageOriginalCenter.x + translation.x, y: topImageOriginalCenter.y + translation.y)
+            
+            // add animation
+            for var index = 0; index < receivedImages.count; index++ {
+                let receivedImage:ReceivedImage = receivedImages[index]
+                let delay: Double = (Double)(index + 1) * 0.1
+                UIView.animateWithDuration(delay, animations: { () -> Void in
+                    receivedImage.center = CGPoint(x: receivedImage.frame.origin.x + translation.x, y: receivedImage.frame.origin.y + translation.y)
+                })
+            }
+
+        } else if sender.state == UIGestureRecognizerState.Ended {
+            for var index = 0; index < self.receivedImages.count; index++ {
+                let receivedImage:ReceivedImage = receivedImages[index]
+                let offsetY: CGFloat = (CGFloat)(index + 1) + 5
+                let offsetX: CGFloat = (CGFloat)(index + 1) + 5
+                
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    if receivedImage.center.x < self.view.frame.width/2 && receivedImage.center.y < self.view.frame.height/2 {
+                    receivedImage.center = CGPoint(x: 40 + offsetX, y: 40 + offsetY)
+                        
+                    } else if receivedImage.center.x > self.view.frame.width/2 && receivedImage.center.y < self.view.frame.height/2 {
+                    receivedImage.center = CGPoint(x: self.view.frame.width - 40 - offsetX, y: 40 + offsetY)
+                    
+                    } else if receivedImage.center.x > self.view.frame.width/2 && receivedImage.center.y > self.view.frame.height/2 {
+                    receivedImage.center = CGPoint(x: self.view.frame.width - 40 - offsetX, y: self.view.frame.height - 40 - offsetY)
+                
+                    } else {
+                    receivedImage.center = CGPoint(x: 40 + offsetX, y: self.view.frame.height - 40 - offsetY)
+                
+                    }
+                })
+
+            }
+        }
     }
     
     func didPanReceivedPhoto(sender:UIPanGestureRecognizer) {
