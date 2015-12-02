@@ -100,13 +100,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
             }
         }
     }
-<<<<<<< HEAD
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-=======
->>>>>>> master
     
     @IBAction func didPressCancel(sender: AnyObject) {
         
@@ -146,9 +139,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-<<<<<<< HEAD
-    
-=======
     func respondToNotif(userInfo:NSNotification) {
         
         attemptToPair(user!) { (result, userStatus) -> Void in
@@ -169,9 +159,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-
->>>>>>> master
 }
 
 
