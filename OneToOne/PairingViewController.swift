@@ -11,23 +11,23 @@ import Parse
 import MessageUI
 
 class PairingViewController: UIViewController, MFMessageComposeViewControllerDelegate{
-
-    var enteredCode = ""
+    
     @IBOutlet weak var instructionLabel: UILabel!
-    var count = 1000
+    @IBOutlet weak var sendMessageButton: UIButton!
+    var enteredCode = ""
     
     // Starting elapsed time at 0 so on first loading we can show 10:00 remaining
-    var elaspedTime: NSTimeInterval = 0
+    var elapsedTime: NSTimeInterval = 0
     
     let user = PFUser.currentUser()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Update every second
         var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
-
+        
         if user != nil {
-            
             if enteredCode == "" {
                 enteredCode = user!["code"] as! String
             }
@@ -45,9 +45,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 }
             }
         }
-        
-        //instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next 10:00 to pair."
-
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -57,21 +54,40 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         // When view appears, get interval since code created time from Parse
         getCodeCreatedTime { (interval, result) -> Void in
             if result {
-                self.elaspedTime = interval
+                self.elapsedTime = interval
             }
         }
     }
     
     func update() {
-        let timeLeft = String(format:"%02d:%02d", (count/100)%6000, count%100)
+
+        // Get time since code created
+        let duration = Int(elapsedTime)
+        let secondsRemaining = 600 - duration
         
-        if(count > 0)
+        // Convert int to mm:ss
+        let time = secondsRemaining
+        let minutes = (time / 60) % 60
+        let seconds = time % 60
+        let timeRemaining = String(format:"%02d:%02d", minutes, seconds)
+        
+        // Digits are monospaced
+        instructionLabel.font = UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightRegular)
+
+        // Update code + time remaining message
+        if(elapsedTime < 600.00)
         {
-            count--
-            instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeLeft) to pair."
-            
+            self.elapsedTime++
+            instructionLabel.text = "Tell the recipient to enter \(enteredCode) within the next \(timeRemaining) to pair."
+        } else {
+            let alertController = UIAlertController(title: "Expired Code", message: "Your code '\(enteredCode)' has expired. Please try again by creating a new code.", preferredStyle: .Alert)
+            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            }
+            alertController.addAction(OKAction)
+            self.presentViewController(alertController, animated: true) {
+                // ** Close and return to LoginViewController **fix
+            }
         }
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -86,7 +102,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         
         // Go to login screen
         if self.parentViewController == nil {
-        // We came from login, so can dismiss
+            // We came from login, so can dismiss
             self.dismissViewControllerAnimated(false, completion: nil)
         } else {
             // Pairing was initial VC
@@ -114,7 +130,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         } else {
             print("User hasn't setup Messages.app")
         }
-        
     }
     
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
@@ -122,7 +137,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     func respondToNotif(userInfo:NSNotification) {
-        
         attemptToPair(user!) { (result, userStatus) -> Void in
             if result {
                 switch userStatus {
@@ -137,12 +151,9 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         }
         
     }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-
 }
 
 
