@@ -8,7 +8,6 @@
 
 import UIKit
 import Parse
-var timeCreated = NSDate()
 
 enum UserStatus {
     case None, Anonymous, Unpaired, Paired
@@ -107,9 +106,7 @@ func validateCode(enteredCode: String, completion: (result:Bool, codeStatus:Code
 
 // New initial user
 func createUser(enteredCode: String, completion: (result: Bool) -> Void) {
-    
-    timeCreated = NSDate()
-    
+        
     let newUser = PFUser.currentUser()
     newUser!.username = randomStringWithLength(8) as String
     newUser!.password = randomStringWithLength(8) as String

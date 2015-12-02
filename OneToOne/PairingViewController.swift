@@ -21,8 +21,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     
     let user = PFUser.currentUser()
     
-    //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,16 +73,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         
         // Digits are monospaced
         instructionLabel.font = UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightRegular)
-        
-        /* need to fix to bold \(enteredCode) and \(timeRemaining)
-        // font attributes
-        let codeAttributes = [ NSFontAttributeName: UIFont.boldSystemFontOfSize(18)]
-        let enteredCodeString = NSMutableAttributedString(string: "\(enteredCode)", attributes: codeAttributes)
-        
-        let digitAttributes = [NSFontAttributeName: UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightBold)]
-        let timeRemainingString = NSMutableAttributedString(string: "\(timeRemaining)", attributes: digitAttributes)
-        */
-
 
         // Update code + time remaining message
         if(elapsedTime < 600.00)
