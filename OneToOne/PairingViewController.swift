@@ -20,6 +20,9 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
     
     
+    // Starting elapsed time at 0 so on first loading we can show 10:00 remaining
+    var elaspedTime: NSTimeInterval = 0
+    
     let user = PFUser.currentUser()
     
     override func viewDidLoad() {
@@ -51,6 +54,13 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     override func viewDidAppear(animated: Bool) {
         // Add notif observer (may need to remove too?)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "justPaired", object: nil)
+        
+        // When view appears, get interval since code created time from Parse
+        getCodeCreatedTime { (interval, result) -> Void in
+            if result {
+                self.elaspedTime = interval
+            }
+        }
     }
     
     func update() {
