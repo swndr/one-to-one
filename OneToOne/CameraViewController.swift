@@ -265,15 +265,43 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             
         } else if sender.state == UIGestureRecognizerState.Ended {
             
-            if capturedPhoto.center.y > UIScreen.mainScreen().bounds.height/3 && capturedPhoto.center.y < (UIScreen.mainScreen().bounds.height/3)*2 {
-                let options: UIViewAnimationOptions = .CurveEaseInOut
+            let options: UIViewAnimationOptions = .CurveEaseInOut
+            
+            // Bounce to center
+            if capturedPhoto.center.y > UIScreen.mainScreen().bounds.height/4 && capturedPhoto.center.y < (UIScreen.mainScreen().bounds.height/4)*3 {
                 UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
                     
                     self.capturedPhoto.center.y = UIScreen.mainScreen().bounds.height/2
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
                     
                         }, completion: { finished in
 
                     })
+            // Send
+            } else if capturedPhoto.center.y <= UIScreen.mainScreen().bounds.height/4 {
+            print("send")
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    self.capturedPhoto.frame.size.height = UIScreen.mainScreen().bounds.origin.y - 50.0
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                        self.sendPhoto(self.capturedPhoto)
+                })
+            // Cancel
+            } else {
+            print("cancel")
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    self.capturedPhoto.frame.origin.y = UIScreen.mainScreen().bounds.height + 50.0
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                        self.discardPhoto(self.capturedPhoto)
+                })
             }
         }
         
@@ -288,17 +316,32 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         cameraPreview.userInteractionEnabled = true
     }
     
-    @IBAction func didSendPhoto(sender: UIButton) {
-        // Save to camera roll
-        UIImageWriteToSavedPhotosAlbum(UIImage(data: capturedPhoto.imageData)!, nil, nil, nil)
+    func sendPhoto(photoToSend:CapturedPhoto) {
+        
+        self.sendButton.setTitle("Sending...", forState: .Normal)
+        self.sendButton.userInteractionEnabled = false
         
         // TODO: MAKE THIS NICE
-        capturedPhoto.sendImage(capturedPhoto.imageData, recipientUsername: recipientUsername)
-        capturedPhoto.removeFromSuperview()
-        self.sendButton.alpha = 0
-        self.cancelButton.alpha = 0
-        self.overlay.alpha = 0
-        cameraPreview.userInteractionEnabled = true
+        capturedPhoto.sendImage(capturedPhoto.imageData, recipientUsername: recipientUsername) { (sent) -> Void in
+            print("Sending...") // ADD LOADING SPINNER
+            if sent {
+                print("Sent")
+                self.capturedPhoto.removeFromSuperview()
+                self.sendButton.alpha = 0
+                self.cancelButton.alpha = 0
+                self.overlay.alpha = 0
+                self.cameraPreview.userInteractionEnabled = true
+                self.sendButton.setTitle("Send", forState: .Normal)
+                self.sendButton.userInteractionEnabled = true
+                
+                // Save to camera roll
+                UIImageWriteToSavedPhotosAlbum(UIImage(data: self.capturedPhoto.imageData)!, nil, nil, nil)
+            }
+        }
+    }
+    
+    @IBAction func didSendPhoto(sender: UIButton) {
+        sendPhoto(capturedPhoto)
     }
     
     @IBAction func didDiscardPhoto(sender: UIButton) {

@@ -30,7 +30,7 @@ class CapturedPhoto: UIImageView {
     }
     
     // Send image to Parse and notify recipient
-    func sendImage(data: NSData, recipientUsername:String) {
+    func sendImage(data: NSData, recipientUsername:String, completion: (sent:Bool) -> Void) {
         
         // Save to user's photos
         UIImageWriteToSavedPhotosAlbum(UIImage(data: data)!, nil, nil, nil)
@@ -79,6 +79,7 @@ class CapturedPhoto: UIImageView {
                     push.setQuery(pushQuery) // Set our Installation query
                     push.setData(data)
                     push.sendPushInBackground()
+                    completion(sent: true)
                 } else {
                     print(error)
                 }
