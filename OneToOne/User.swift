@@ -177,7 +177,7 @@ func createUser(codeObject: PFObject, completion: (result: Bool) -> Void) {
                     let errorString = error.userInfo["error"] as? NSString
                     print(errorString)
                 } else {
-                    // Get recipient to notify ** not working yet **
+                    // Get recipient to notify
                     let recipient: PFUser?
                     let query:PFQuery = PFUser.query()!
                     query.whereKey("username", equalTo:codeObject["creator"])

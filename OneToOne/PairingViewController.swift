@@ -20,10 +20,10 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
     
     
+    let user = PFUser.currentUser()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let user = PFUser.currentUser()
         
         var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
         
@@ -39,13 +39,18 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                     case .Paired:
                         print("Now paired")
                         // Go to camera screen
-                        self.performSegueWithIdentifier("cameraSegue", sender: self)
+                        self.performSegueWithIdentifier("pairingToCameraSegue", sender: self)
                     default:
-                        print("Still not paired") // Getting called twice ** investigate
+                        print("Still not paired")
                     }
                 }
             }
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        // Add notif observer (may need to remove too?)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "justPaired", object: nil)
     }
     
     func update() {
@@ -95,10 +100,13 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
             }
         }
     }
+<<<<<<< HEAD
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+=======
+>>>>>>> master
     
     @IBAction func didPressCancel(sender: AnyObject) {
         
@@ -134,12 +142,36 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         }
     }
     
-    
-    func messageComposeViewController(controller: MFMessageComposeViewController!, didFinishWithResult result: MessageComposeResult) {
+    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+<<<<<<< HEAD
     
+=======
+    func respondToNotif(userInfo:NSNotification) {
+        
+        attemptToPair(user!) { (result, userStatus) -> Void in
+            if result {
+                switch userStatus {
+                case .Paired:
+                    print("Now paired")
+                    // Go to camera screen
+                    self.performSegueWithIdentifier("pairingToCameraSegue", sender: self)
+                default:
+                    print("Still not paired")
+                }
+            }
+        }
+        
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+
+>>>>>>> master
 }
 
 

@@ -55,7 +55,14 @@ class LoginViewController: UIViewController {
         }
     }
     
+    @IBAction func didPressNextKey(sender: AnyObject) {
+        attemptLogin()
+    }
     @IBAction func didPressNext(sender: AnyObject) {
+        attemptLogin()
+    }
+        
+    func attemptLogin() {
         self.pairingIndicator.startAnimating()
         nextButton.selected = true
         

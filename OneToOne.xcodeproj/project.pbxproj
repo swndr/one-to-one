@@ -19,6 +19,7 @@
 		C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */; };
 		C2ACB92D1C026C260058B6FF /* ReceivedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */; };
 		C2ACB92E1C026C260058B6FF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2ACB92C1C026C260058B6FF /* User.swift */; };
+		C2B881921C065135004DB36B /* CapturedPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B881911C065135004DB36B /* CapturedPhoto.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceivedImage.swift; sourceTree = "<group>"; };
 		C2ACB92C1C026C260058B6FF /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		C2B881911C065135004DB36B /* CapturedPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapturedPhoto.swift; sourceTree = "<group>"; };
 		D0EB5321BAB0871EC94C9C0B /* Pods-OneToOne.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneToOne.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +90,7 @@
 				C216109D1BFCF1FC00284FE9 /* CameraViewController.swift */,
 				C2ACB92C1C026C260058B6FF /* User.swift */,
 				C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */,
+				C2B881911C065135004DB36B /* CapturedPhoto.swift */,
 				5DB576781BFD7D5D00DD5AB9 /* Common.swift */,
 				C216108D1BFCEFE300284FE9 /* Main.storyboard */,
 				C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */,
@@ -236,6 +239,7 @@
 			files = (
 				C216108C1BFCEFE300284FE9 /* LoginViewController.swift in Sources */,
 				C2ACB92D1C026C260058B6FF /* ReceivedImage.swift in Sources */,
+				C2B881921C065135004DB36B /* CapturedPhoto.swift in Sources */,
 				C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */,
 				C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */,
 				C2ACB92E1C026C260058B6FF /* User.swift in Sources */,

@@ -43,6 +43,9 @@
                                                         <color key="value" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="didPressNextKey:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="aTc-ke-R2x"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                         <animations/>
@@ -126,9 +129,66 @@
                     <view key="view" contentMode="scaleToFill" id="uly-V9-c1U">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32A-Bc-yUO">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xx2-WV-Jhp">
+                                <rect key="frame" x="266" y="40" width="68" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Send">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="0.503404772" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didSendPhoto:" destination="dK9-Td-VYL" eventType="touchUpInside" id="sHF-Xa-20r"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gTW-DB-PEi">
+                                <rect key="frame" x="276" y="540" width="48" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="0.503404772" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didDiscardPhoto:" destination="dK9-Td-VYL" eventType="touchUpInside" id="KYU-OP-0EX"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hj4-C8-3qd">
+                                <rect key="frame" x="40" y="540" width="30" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Flip">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="0.50340477195945943" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didFlipCamera:" destination="dK9-Td-VYL" eventType="touchUpInside" id="Ofo-fm-eyD"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xx2-WV-Jhp" firstAttribute="top" secondItem="LMN-0S-HyT" secondAttribute="bottom" constant="20" id="1Xt-AZ-BiT"/>
+                            <constraint firstItem="gTW-DB-PEi" firstAttribute="centerX" secondItem="uly-V9-c1U" secondAttribute="centerX" id="Aez-4l-pGR"/>
+                            <constraint firstItem="xx2-WV-Jhp" firstAttribute="centerX" secondItem="uly-V9-c1U" secondAttribute="centerX" id="Lu4-NR-6c8"/>
+                            <constraint firstItem="32A-Bc-yUO" firstAttribute="top" secondItem="uly-V9-c1U" secondAttribute="topMargin" id="NDh-YU-ozY"/>
+                            <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="gTW-DB-PEi" secondAttribute="bottom" constant="20" id="TDf-Db-OfM"/>
+                            <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="hj4-C8-3qd" secondAttribute="bottom" constant="20" id="Vu5-UH-dCC"/>
+                            <constraint firstItem="32A-Bc-yUO" firstAttribute="leading" secondItem="uly-V9-c1U" secondAttribute="leading" id="dd6-js-wWu"/>
+                            <constraint firstItem="hj4-C8-3qd" firstAttribute="leading" secondItem="uly-V9-c1U" secondAttribute="leadingMargin" constant="20" id="fgz-xb-wEP"/>
+                            <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="32A-Bc-yUO" secondAttribute="bottom" id="hXU-BA-ajA"/>
+                            <constraint firstAttribute="trailing" secondItem="32A-Bc-yUO" secondAttribute="trailing" id="qff-st-bfe"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="cameraContainer" destination="32A-Bc-yUO" id="nHR-i7-7fL"/>
+                        <outlet property="cancelButton" destination="gTW-DB-PEi" id="IPz-xh-aS5"/>
+                        <outlet property="sendButton" destination="xx2-WV-Jhp" id="WFv-1T-rUE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwH-38-Tt9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -224,12 +284,19 @@
                     <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
+<<<<<<< HEAD
                         <outlet property="sendMessageButton" destination="4wQ-99-o4v" id="TXu-qA-9zs"/>
+=======
+                        <segue destination="dK9-Td-VYL" kind="presentation" identifier="pairingToCameraSegue" animates="NO" id="bnm-uG-T0h"/>
+>>>>>>> master
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2141" y="404"/>
+            <point key="canvasLocation" x="2077" y="404"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="bnm-uG-T0h"/>
+    </inferredMetricsTieBreakers>
 </document>
