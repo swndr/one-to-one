@@ -13,6 +13,7 @@ class ReceivedImage: UIImageView {
 
     var objectID = String()
     var created = NSDate()
+    var originalCenter:CGPoint!
     var displayed = false
     
     // Store ID with image
@@ -23,6 +24,11 @@ class ReceivedImage: UIImageView {
     // Store created date
     func storeCreatedDate(date: NSDate) {
         created = date
+    }
+    
+    // Store originalY position when pan begins
+    func storeOriginalY(center:CGPoint) {
+        originalCenter = center
     }
     
     // Set when displayed

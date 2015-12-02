@@ -47,6 +47,10 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     // Array to store received images
     var receivedImages: [ReceivedImage] = []
     
+    // Storing thumbnail positions
+    var lastThumbX:CGFloat!
+    var lastThumbY:CGFloat!
+    
     // Current user
     let user = PFUser.currentUser()
     
@@ -104,6 +108,11 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     override func viewDidAppear(animated: Bool) {
         // Fetch new photos
         // TODO: FIND WAY TO AUTOMATE / INITIATE REFRESHING
+        
+        if receivedImages.count == 0 {
+            lastThumbX = 0
+            lastThumbY = 0
+        }
         
         // Add notif observer (may need to remove too?)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "newPhoto", object: nil)
@@ -405,6 +414,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         // Get new images then add to receivedImages array
         getObjects { (done) -> Void in
             if done {
+                let existingImages = self.receivedImages.count
                 print("Successfully retrieved \(newImages.count) photos.")
                 // Total to track download completion
                 //var totalPercentDone:Int32 = 100 * Int32(newImages.count)
@@ -437,7 +447,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                             if object == newImages.last && percentDone == 100 {
                                 
                                 func checkCompletion() {
-                                    if self.receivedImages.count == newImages.count {
+                                    if (self.receivedImages.count - existingImages) == newImages.count {
                                         completion(true)
                                     } else {
                                         delay(0.2, closure: { () -> () in
@@ -460,11 +470,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         print("Displaying received photos")
         print(receivedImages.count)
         
-        //TEMP LOCATION FOR IMAGES
-        var tempY:CGFloat = 100
-        
         for image in receivedImages {
-            print(image.displayed)
             if image.displayed {
                 // Remove gesture recognizer from any older image
                 if image.gestureRecognizers?.count > 1 {
@@ -475,13 +481,23 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 }
             } else {
                 // Clip and shrink images, display in view
-                image.frame.origin.y += tempY
+                if lastThumbX == 0 {
+                    image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 60, UIScreen.mainScreen().bounds.height - 50)
+                    lastThumbX = image.center.x
+                    lastThumbY = image.center.y
+                } else {
+                    image.center = CGPointMake(lastThumbX + randRange(-20, upper: 20), lastThumbY + randRange(-20, upper: 20))
+                    lastThumbX = image.center.x
+                    lastThumbY = image.center.y
+                }
                 image.frame.size.height = ((image.frame.height/4.0) * 3.0)
                 image.layer.cornerRadius = image.frame.width/2
+                image.layer.borderWidth = 5.0
+                image.layer.borderColor = UIColor.whiteColor().CGColor
                 image.contentMode = .ScaleAspectFill
                 image.clipsToBounds = true
+            
                 image.transform = CGAffineTransformMakeScale(0.2,0.2)
-                tempY += 50
                 image.setDisplayed()
                 self.view.addSubview(image)
                 
