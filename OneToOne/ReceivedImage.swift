@@ -27,7 +27,7 @@ class ReceivedImage: UIImageView {
     }
     
     // Store originalY position when pan begins
-    func storeOriginalY(center:CGPoint) {
+    func storeOriginalCenter(center:CGPoint) {
         originalCenter = center
     }
     

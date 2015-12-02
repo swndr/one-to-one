@@ -19,8 +19,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     var justPaired = false
     var recipientUsername = ""
-    // CREATE VARIABLE FOR TOP IMAGE CENTER
-    var topImageOriginalCenter: CGPoint!
     
     // Capture session
     let captureSession = AVCaptureSession()
@@ -550,47 +548,69 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     func didPanReceivedThumbnail(sender:UIPanGestureRecognizer) {
         let translation = sender.translationInView(view)
-        //let velocity = sender.velocityInView(view)
-        //let point = sender.locationInView(view)
-        //let topImage = sender.view
         
         if sender.state == UIGestureRecognizerState.Began {
-            topImageOriginalCenter = view.center
+            for (index,image) in receivedImages.enumerate() {
+                image.storeOriginalCenter(image.center)
+            }
+            self.lastThumbX = 0
 
         } else if sender.state == UIGestureRecognizerState.Changed {
-            view.center = CGPoint(x: topImageOriginalCenter.x + translation.x, y: topImageOriginalCenter.y + translation.y)
             
             // add animation
-            for var index = 0; index < receivedImages.count; index++ {
-                let receivedImage:ReceivedImage = receivedImages[index]
-                let delay: Double = (Double)(index + 1) * 0.1
+            for (index,image) in receivedImages.enumerate() {
+                let delay: Double = (Double)(index) * 0.1
                 UIView.animateWithDuration(delay, animations: { () -> Void in
-                    receivedImage.center = CGPoint(x: receivedImage.frame.origin.x + translation.x, y: receivedImage.frame.origin.y + translation.y)
+                    image.center = CGPoint(x: image.originalCenter.x + translation.x, y: image.originalCenter.y + translation.y)
                 })
             }
 
         } else if sender.state == UIGestureRecognizerState.Ended {
-            for var index = 0; index < self.receivedImages.count; index++ {
-                let receivedImage:ReceivedImage = receivedImages[index]
-                let offsetY: CGFloat = (CGFloat)(index + 1) + 5
-                let offsetX: CGFloat = (CGFloat)(index + 1) + 5
-                
+            
+            for image in receivedImages {
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
-                    if receivedImage.center.x < self.view.frame.width/2 && receivedImage.center.y < self.view.frame.height/2 {
-                    receivedImage.center = CGPoint(x: 40 + offsetX, y: 40 + offsetY)
-                        
-                    } else if receivedImage.center.x > self.view.frame.width/2 && receivedImage.center.y < self.view.frame.height/2 {
-                    receivedImage.center = CGPoint(x: self.view.frame.width - 40 - offsetX, y: 40 + offsetY)
-                    
-                    } else if receivedImage.center.x > self.view.frame.width/2 && receivedImage.center.y > self.view.frame.height/2 {
-                    receivedImage.center = CGPoint(x: self.view.frame.width - 40 - offsetX, y: self.view.frame.height - 40 - offsetY)
-                
+                    if image.center.x < UIScreen.mainScreen().bounds.width/2 && image.center.y < UIScreen.mainScreen().bounds.height/2 {
+                        if self.lastThumbX == 0 {
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 60, UIScreen.mainScreen().bounds.origin.y + 50)
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        } else {
+                            image.center = CGPointMake(self.lastThumbX + randRange(-20, upper: 20), self.lastThumbY + randRange(-20, upper: 20))
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        }
+                    } else if image.center.x > UIScreen.mainScreen().bounds.width/2 && image.center.y < UIScreen.mainScreen().bounds.height/2 {
+                        if self.lastThumbX == 0 {
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.width - 60, UIScreen.mainScreen().bounds.origin.y + 50)
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        } else {
+                            image.center = CGPointMake(self.lastThumbX + randRange(-20, upper: 20), self.lastThumbY + randRange(-20, upper: 20))
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        }
+                    } else if image.center.x > UIScreen.mainScreen().bounds.width/2 && image.center.y > UIScreen.mainScreen().bounds.height/2 {
+                        if self.lastThumbX == 0 {
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.width - 60, UIScreen.mainScreen().bounds.height - 50)
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        } else {
+                            image.center = CGPointMake(self.lastThumbX + randRange(-20, upper: 20), self.lastThumbY + randRange(-20, upper: 20))
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        }
                     } else {
-                    receivedImage.center = CGPoint(x: 40 + offsetX, y: self.view.frame.height - 40 - offsetY)
-                
+                        if self.lastThumbX == 0 {
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 60, UIScreen.mainScreen().bounds.height - 50)
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        } else {
+                            image.center = CGPointMake(self.lastThumbX + randRange(-20, upper: 20), self.lastThumbY + randRange(-20, upper: 20))
+                            self.lastThumbX = image.center.x
+                            self.lastThumbY = image.center.y
+                        }
                     }
                 })
-
             }
         }
     }
