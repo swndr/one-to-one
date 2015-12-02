@@ -14,24 +14,20 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var sendMessageButton: UIButton!
-    var enteredCode = ""
-    var elapsedTime = NSDate().timeIntervalSinceDate(timeCreated)
-
-    //let monospacedFont = UIFont.monospacedDigitSystemFontOfSize(12.0, weight: UIFontWeightBold)
-    
+    var enteredCode = ""    
     
     // Starting elapsed time at 0 so on first loading we can show 10:00 remaining
-    var elaspedTime: NSTimeInterval = 0
+    var elapsedTime: NSTimeInterval = 0
     
     let user = PFUser.currentUser()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Update every second
         var timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("update"), userInfo: nil, repeats: true)
         
         if user != nil {
-            
             if enteredCode == "" {
                 enteredCode = user!["code"] as! String
             }
@@ -58,7 +54,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         // When view appears, get interval since code created time from Parse
         getCodeCreatedTime { (interval, result) -> Void in
             if result {
-                self.elaspedTime = interval
+                self.elapsedTime = interval
             }
         }
     }
@@ -75,18 +71,9 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         let seconds = time % 60
         let timeRemaining = String(format:"%02d:%02d", minutes, seconds)
         
+        // Digits are monospaced
         instructionLabel.font = UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightRegular)
-        
-        /* need to fix to bold \(enteredCode) and \(timeRemaining)
-        // font attributes
-        let codeAttributes = [ NSFontAttributeName: UIFont.boldSystemFontOfSize(18)]
-        let enteredCodeString = NSMutableAttributedString(string: "\(enteredCode)", attributes: codeAttributes)
-        
-        let digitAttributes = [NSFontAttributeName: UIFont.monospacedDigitSystemFontOfSize(18, weight: UIFontWeightBold)]
-        let timeRemainingString = NSMutableAttributedString(string: "\(timeRemaining)", attributes: digitAttributes)
-        */
 
-        
         // Update code + time remaining message
         if(elapsedTime < 600.00)
         {
@@ -150,7 +137,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     func respondToNotif(userInfo:NSNotification) {
-        
         attemptToPair(user!) { (result, userStatus) -> Void in
             if result {
                 switch userStatus {
@@ -165,7 +151,6 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         }
         
     }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
