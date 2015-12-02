@@ -12,6 +12,7 @@ import Parse
 class CapturedPhoto: UIImageView {
 
     var imageData: NSData!
+    var originalY: CGFloat!
     
     // Store image data with the image
     func storeData(data: NSData) {
@@ -23,8 +24,13 @@ class CapturedPhoto: UIImageView {
         self.image = UIImage(data: data)
     }
     
+    // Store originalY position when pan begins
+    func storeOriginalY(pos:CGFloat) {
+        originalY = pos
+    }
+    
     // Send image to Parse and notify recipient
-    func sendImage(data: NSData, recipientUsername:String) {
+    func sendImage(data: NSData, recipientUsername:String, completion: (sent:Bool) -> Void) {
         
         // Save to user's photos
         UIImageWriteToSavedPhotosAlbum(UIImage(data: data)!, nil, nil, nil)
@@ -55,23 +61,29 @@ class CapturedPhoto: UIImageView {
             acl.setPublicWriteAccess(true)
             photo.ACL = acl
             
-            photo.saveInBackground()
-            print("Saved image to Parse")
-            
-            // Create our Installation query
-            let pushQuery = PFInstallation.query()
-            pushQuery!.whereKey("user", equalTo: recipient!)
-            
-            let data = [
-                "alert" : "📷 You received a new photo!",
-                "event" : "photo"
-            ]
-            
-            // Send push notification to query
-            let push = PFPush()
-            push.setQuery(pushQuery) // Set our Installation query
-            push.setData(data)
-            push.sendPushInBackground()
+            photo.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if success {
+                    print("Saved image to Parse")
+                    
+                    // Create our Installation query
+                    let pushQuery = PFInstallation.query()
+                    pushQuery!.whereKey("user", equalTo: recipient!)
+                    
+                    let data = [
+                        "alert" : "📷 You received a new photo!",
+                        "event" : "photo"
+                    ]
+                    
+                    // Send push notification to query
+                    let push = PFPush()
+                    push.setQuery(pushQuery) // Set our Installation query
+                    push.setData(data)
+                    push.sendPushInBackground()
+                    completion(sent: true)
+                } else {
+                    print(error)
+                }
+            })
         }
     }
 }

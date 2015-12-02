@@ -27,3 +27,7 @@ func convertValue(value: CGFloat, r1Min: CGFloat, r1Max: CGFloat, r2Min: CGFloat
     return value * ratio + r2Min - r1Min * ratio
 }
 
+func degree2radian(a:CGFloat)->CGFloat {
+    let b = CGFloat(M_PI) * a/180
+    return b
+}
