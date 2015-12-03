@@ -133,7 +133,29 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32A-Bc-yUO">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <animations/>
-                                <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.25879129767417908" green="0.25884205102920532" blue="0.25878810882568359" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="alV-EN-012" userLabel="NUX Banner">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q1U-o2-b22">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
+                                        <color key="backgroundColor" red="0.25879129767417908" green="0.25884205102920532" blue="0.25878810882568359" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You're paired! Tap anywhere on the screen to take a picture." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0hd-Zn-dnS">
+                                        <rect key="frame" x="184" y="28" width="233" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.40777188539505005" green="0.40784671902656555" blue="0.40776711702346802" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="0hd-Zn-dnS" firstAttribute="leading" secondItem="alV-EN-012" secondAttribute="leading" id="5wD-ht-uBi"/>
+                                    <constraint firstItem="0hd-Zn-dnS" firstAttribute="top" secondItem="alV-EN-012" secondAttribute="top" constant="28" id="YjJ-Pv-ipe"/>
+                                    <constraint firstAttribute="trailing" secondItem="0hd-Zn-dnS" secondAttribute="trailing" id="oYa-f7-xit"/>
+                                    <constraint firstAttribute="bottom" secondItem="0hd-Zn-dnS" secondAttribute="bottom" constant="8" id="pJF-6V-TPv"/>
+                                </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xx2-WV-Jhp">
                                 <rect key="frame" x="266" y="40" width="68" height="30"/>
@@ -174,19 +196,26 @@
                         <constraints>
                             <constraint firstItem="xx2-WV-Jhp" firstAttribute="top" secondItem="LMN-0S-HyT" secondAttribute="bottom" constant="20" id="1Xt-AZ-BiT"/>
                             <constraint firstItem="gTW-DB-PEi" firstAttribute="centerX" secondItem="uly-V9-c1U" secondAttribute="centerX" id="Aez-4l-pGR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="alV-EN-012" secondAttribute="trailing" constant="20" id="Ivc-6D-4Pt"/>
                             <constraint firstItem="xx2-WV-Jhp" firstAttribute="centerX" secondItem="uly-V9-c1U" secondAttribute="centerX" id="Lu4-NR-6c8"/>
                             <constraint firstItem="32A-Bc-yUO" firstAttribute="top" secondItem="uly-V9-c1U" secondAttribute="topMargin" id="NDh-YU-ozY"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="alV-EN-012" secondAttribute="trailing" constant="-20" id="TAO-Wj-ar2"/>
                             <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="gTW-DB-PEi" secondAttribute="bottom" constant="20" id="TDf-Db-OfM"/>
                             <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="hj4-C8-3qd" secondAttribute="bottom" constant="20" id="Vu5-UH-dCC"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="alV-EN-012" secondAttribute="trailing" id="dQx-3z-ELg"/>
                             <constraint firstItem="32A-Bc-yUO" firstAttribute="leading" secondItem="uly-V9-c1U" secondAttribute="leading" id="dd6-js-wWu"/>
                             <constraint firstItem="hj4-C8-3qd" firstAttribute="leading" secondItem="uly-V9-c1U" secondAttribute="leadingMargin" constant="20" id="fgz-xb-wEP"/>
                             <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="32A-Bc-yUO" secondAttribute="bottom" id="hXU-BA-ajA"/>
+                            <constraint firstItem="alV-EN-012" firstAttribute="leading" secondItem="uly-V9-c1U" secondAttribute="leadingMargin" constant="-20" id="iL0-VE-fRj"/>
+                            <constraint firstItem="alV-EN-012" firstAttribute="top" secondItem="uly-V9-c1U" secondAttribute="topMargin" id="lqo-Jt-c2a"/>
                             <constraint firstAttribute="trailing" secondItem="32A-Bc-yUO" secondAttribute="trailing" id="qff-st-bfe"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="alV-EN-012" secondAttribute="trailing" constant="-20" id="yEQ-Tb-75B"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cameraContainer" destination="32A-Bc-yUO" id="nHR-i7-7fL"/>
                         <outlet property="cancelButton" destination="gTW-DB-PEi" id="IPz-xh-aS5"/>
+                        <outlet property="nuxBanner" destination="alV-EN-012" id="oKf-s9-xJc"/>
                         <outlet property="sendButton" destination="xx2-WV-Jhp" id="WFv-1T-rUE"/>
                     </connections>
                 </viewController>
@@ -225,16 +254,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-Jp-yhM">
-                                <rect key="frame" x="20" y="20" width="56" height="34"/>
-                                <animations/>
-                                <state key="normal" title="Cancel">
-                                    <color key="titleColor" red="0.38651725650000002" green="0.85240232940000005" blue="0.74656403059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="didPressCancel:" destination="idb-7w-007" eventType="touchUpInside" id="AG2-he-eOh"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y0r-4B-AOj" userLabel="WaitingText">
                                 <rect key="frame" x="0.0" y="158" width="310" height="194"/>
                                 <subviews>
@@ -272,11 +291,23 @@
                                     <constraint firstItem="weS-0q-RTM" firstAttribute="top" secondItem="Ovh-Xw-9tf" secondAttribute="bottom" constant="18" id="r73-rn-Y1o"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-Jp-yhM">
+                                <rect key="frame" x="0.0" y="0.0" width="56" height="34"/>
+                                <animations/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="0.38651725650000002" green="0.85240232940000005" blue="0.74656403059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="didPressCancel:" destination="idb-7w-007" eventType="touchUpInside" id="AG2-he-eOh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <constraints>
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="top" secondItem="Vhf-Jp-yhM" secondAttribute="bottom" constant="48" id="U2V-08-Cv3"/>
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="leading" secondItem="INj-vn-3Yo" secondAttribute="leadingMargin" id="dM2-Mi-gbm"/>
+                            <constraint firstItem="Vhf-Jp-yhM" firstAttribute="top" secondItem="P9I-gt-zOc" secondAttribute="bottom" id="jWg-8D-cIL"/>
+                            <constraint firstItem="Vhf-Jp-yhM" firstAttribute="leading" secondItem="INj-vn-3Yo" secondAttribute="leadingMargin" id="kBM-WW-yDi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="y0r-4B-AOj" secondAttribute="trailing" id="rIP-Ds-17d"/>
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="centerX" secondItem="INj-vn-3Yo" secondAttribute="centerX" id="rXS-fM-9sn"/>
                         </constraints>
@@ -284,16 +315,13 @@
                     <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
-<<<<<<< HEAD
                         <outlet property="sendMessageButton" destination="4wQ-99-o4v" id="TXu-qA-9zs"/>
-=======
                         <segue destination="dK9-Td-VYL" kind="presentation" identifier="pairingToCameraSegue" animates="NO" id="bnm-uG-T0h"/>
->>>>>>> master
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdT-J1-Ppt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2077" y="404"/>
+            <point key="canvasLocation" x="2112" y="422"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

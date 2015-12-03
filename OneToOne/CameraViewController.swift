@@ -16,6 +16,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     @IBOutlet weak var cameraContainer: UIView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var nuxBanner: UIView!
     
     var justPaired = false
     var recipientUsername = ""
@@ -68,8 +69,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         //let user = PFUser.currentUser()
         recipientUsername = user!["recipient"] as! String
         
+        // Nux Banner
         if justPaired {
             print("Show NUX banner")
+            nuxBanner.alpha = 1
+        } else {
+            nuxBanner.alpha = 0
         }
         
         // Initially set to use back camera
