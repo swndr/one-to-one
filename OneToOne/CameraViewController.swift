@@ -41,7 +41,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     // Init our CapturedPhoto type
     var capturedPhoto = CapturedPhoto()
     
-    // Overlay after image captured *placeholder*
+    // Overlay after image captured
     var overlay = UIView()
     
     // Array to store received images
@@ -325,9 +325,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     func discardPhoto(photoToDiscard:CapturedPhoto) {
         // TODO: MAKE THIS NICE
         photoToDiscard.removeFromSuperview()
-        self.sendButton.alpha = 0
-        self.cancelButton.alpha = 0
-        self.overlay.alpha = 0
+        UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+            self.sendButton.alpha = 0
+            self.cancelButton.alpha = 0
+            self.overlay.alpha = 0
+            }, completion: { (done) -> Void in
+        })
         cameraPreview.userInteractionEnabled = true
         
         for image in self.receivedImages {
@@ -349,9 +352,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             if sent {
                 print("Sent")
                 self.capturedPhoto.removeFromSuperview()
-                self.sendButton.alpha = 0
-                self.cancelButton.alpha = 0
-                self.overlay.alpha = 0
+                UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                    self.sendButton.alpha = 0
+                    self.cancelButton.alpha = 0
+                    self.overlay.alpha = 0
+                    }, completion: { (done) -> Void in
+                })
                 self.cameraPreview.userInteractionEnabled = true
                 self.sendButton.setTitle("Send", forState: .Normal)
                 self.sendButton.userInteractionEnabled = true
@@ -370,11 +376,33 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     }
     
     @IBAction func didSendPhoto(sender: UIButton) {
-        sendPhoto(capturedPhoto)
+        let options: UIViewAnimationOptions = .CurveEaseInOut
+        UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+            
+            self.capturedPhoto.frame.size.height = UIScreen.mainScreen().bounds.origin.y - 50.0
+            self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            
+            }, completion: { finished in
+                delay(0.5, closure: { () -> () in
+                    self.sendPhoto(self.capturedPhoto)
+                })
+        })
     }
     
     @IBAction func didDiscardPhoto(sender: UIButton) {
-        discardPhoto(capturedPhoto)
+        let options: UIViewAnimationOptions = .CurveEaseInOut
+        UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+            
+            self.capturedPhoto.frame.origin.y = UIScreen.mainScreen().bounds.height + 50.0
+            self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            
+            }, completion: { finished in
+                delay(0.5, closure: { () -> () in
+                    self.discardPhoto(self.capturedPhoto)
+                })
+        })
     }
     
     
@@ -491,15 +519,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         print(receivedImages.count)
         
         for image in receivedImages {
-            if image.displayed {
-                // Remove gesture recognizer from any older image
-                if image.gestureRecognizers?.count > 1 {
-                    image.removeGestureRecognizer(panReceivedThumbnails)
-                }
-                if image.gestureRecognizers?.count > 0 {
-                    image.removeGestureRecognizer(tapPhoto)
-                }
-            } else {
+            if !image.displayed {
                 // Clip and shrink images, display in view
                 if lastThumbX == 0 {
                     image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 60, UIScreen.mainScreen().bounds.height - 50)
@@ -520,6 +540,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 image.transform = CGAffineTransformMakeScale(0.001,0.001)
                 image.setDisplayed()
                 self.view.addSubview(image)
+                image.sendSubviewToBack(self.view)
                 
                 UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                     
@@ -527,15 +548,19 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                     
                     }, completion: { (done) -> Void in
                 })
-                
-                // Add gesture recognizer to top image
-                if image == receivedImages.last {
+            } else {
+                self.view.bringSubviewToFront(image)
+            }
+            
+            // Add gesture recognizer to top image
+            if image == receivedImages.last {
+                if image.gestureRecognizers?.count == nil {
                     panReceivedThumbnails = UIPanGestureRecognizer(target: self, action: "didPanReceivedThumbnail:")
                     image.addGestureRecognizer(panReceivedThumbnails)
                     tapPhoto = UITapGestureRecognizer(target: self, action: "didTapTopImage:")
                     image.addGestureRecognizer(tapPhoto)
-                    // MAY NEED TO WORK ON DISTINGUISHING GESTURES / PRIORITY
                 }
+                // MAY NEED TO WORK ON DISTINGUISHING GESTURES / PRIORITY
             }
         }
     }
@@ -585,7 +610,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         let translation = sender.translationInView(view)
         
         if sender.state == UIGestureRecognizerState.Began {
-            for (index,image) in receivedImages.enumerate() {
+            for image in receivedImages {
                 image.storeOriginalCenter(image.center)
             }
             self.lastThumbX = 0
@@ -594,7 +619,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             
             // add animation
             for (index,image) in receivedImages.enumerate() {
-                let delay: Double = (Double)(index) * 0.1
+                // Subtract from count so the front one leads and back ones follow
+                let delay: Double = (Double)(receivedImages.count - index) * 0.1
                 UIView.animateWithDuration(delay, animations: { () -> Void in
                     image.center = CGPoint(x: image.originalCenter.x + translation.x, y: image.originalCenter.y + translation.y)
                 })
@@ -731,6 +757,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         UIImageWriteToSavedPhotosAlbum(UIImage(data: image.imageData)!, nil, nil, nil)
         // Delete from Parse
         image.deleteSeenPhoto(image.objectID)
+        image.removeFromSuperview()
     }
     
     func discardReceivedPhoto(image: ReceivedImage) {
@@ -746,6 +773,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         }
         // Delete from Parse
         image.deleteSeenPhoto(image.objectID)
+        image.removeFromSuperview()
         
     }
     
