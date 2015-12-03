@@ -19,6 +19,9 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     // Starting elapsed time at 0 so on first loading we can show 10:00 remaining
     var elapsedTime: NSTimeInterval = 0
     
+    // Pairing timer
+    var pairingTimer = NSTimer()
+    
     let user = PFUser.currentUser()
     
     override func viewDidLoad() {
@@ -48,8 +51,11 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     override func viewDidAppear(animated: Bool) {
-        // Add notif observer (may need to remove too?)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "justPaired", object: nil)
+        // DISABLED FOR DEMO
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "justPaired", object: nil)
+        
+        // Begin checking for paired
+        startTimer()
         
         // When view appears, get interval since code created time from Parse
         getCodeCreatedTime { (interval, result) -> Void in
@@ -92,6 +98,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "pairingToCameraSegue" {
+            endTimer()
             if let destinationVC = segue.destinationViewController as? CameraViewController {
                 destinationVC.justPaired = true
             }
@@ -99,6 +106,8 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     @IBAction func didPressCancel(sender: AnyObject) {
+        
+        endTimer()
         
         // Go to login screen
         if self.parentViewController == nil {
@@ -136,6 +145,30 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func startTimer() {
+        pairingTimer = NSTimer.scheduledTimerWithTimeInterval(15, target: self, selector: Selector("lookForNewPhotos"), userInfo: nil, repeats: true)
+    }
+    
+    func endTimer() {
+        pairingTimer.invalidate()
+    }
+    
+    func lookForNewPhotos() {
+        attemptToPair(user!) { (result, userStatus) -> Void in
+            if result {
+                switch userStatus {
+                case .Paired:
+                    print("Now paired")
+                    // Go to camera screen
+                    self.performSegueWithIdentifier("pairingToCameraSegue", sender: self)
+                default:
+                    print("Still not paired")
+                }
+            }
+        }
+    }
+    
+    // IGNORING FOR DEMO
     func respondToNotif(userInfo:NSNotification) {
         attemptToPair(user!) { (result, userStatus) -> Void in
             if result {

@@ -639,7 +639,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 if image.displayed {
                     image.layer.cornerRadius = 0
                     image.layer.borderWidth = 0.0
-//                    image.layer.borderColor = UIColor.whiteColor().CGColor
                     image.frame.size.height = ((image.frame.height/3.0) * 4.0)
                     image.center.x = UIScreen.mainScreen().bounds.width/2
                     image.center.y = UIScreen.mainScreen().bounds.height/2
@@ -652,6 +651,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             }
 
             }) { (finished) -> Void in
+                self.view.bringSubviewToFront(self.saveButton)
+                self.view.bringSubviewToFront(self.discardButton)
                 
         }
     }
