@@ -14,7 +14,9 @@ class ReceivedImage: UIImageView {
     var objectID = String()
     var created = NSDate()
     var originalCenter:CGPoint!
+    var originalY: CGFloat!
     var displayed = false
+    var imageData:NSData!
     
     // Store ID with image
     func storeObjectID(id: String) {
@@ -31,6 +33,11 @@ class ReceivedImage: UIImageView {
         originalCenter = center
     }
     
+    // Store originalY position when pan begins
+    func storeOriginalY(pos:CGFloat) {
+        originalY = pos
+    }
+    
     // Set when displayed
     func setDisplayed() {
         displayed = true
@@ -38,11 +45,12 @@ class ReceivedImage: UIImageView {
     
     func setImageForView(data: NSData) {
         self.image = UIImage(data: data)
+        imageData = data
     }
     
     // Remove image from Parse
     func deleteSeenPhoto(id: String) {
-        let query = PFQuery(className:"SentPhoto")
+        let query = PFQuery(className:"Photo")
         query.getObjectInBackgroundWithId(id) {
             (imageToDelete: PFObject?, error: NSError?) -> Void in
             if error != nil {

@@ -181,7 +181,6 @@
                             <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="gTW-DB-PEi" secondAttribute="bottom" constant="20" id="TDf-Db-OfM"/>
                             <constraint firstItem="32A-Bc-yUO" firstAttribute="leading" secondItem="uly-V9-c1U" secondAttribute="leading" id="dd6-js-wWu"/>
                             <constraint firstItem="rhC-14-tGf" firstAttribute="top" secondItem="32A-Bc-yUO" secondAttribute="bottom" id="hXU-BA-ajA"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="hj4-C8-3qd" secondAttribute="trailing" constant="20" id="ht5-eq-pRQ"/>
                             <constraint firstAttribute="trailing" secondItem="32A-Bc-yUO" secondAttribute="trailing" id="qff-st-bfe"/>
                         </constraints>
                     </view>

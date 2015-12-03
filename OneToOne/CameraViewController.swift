@@ -210,6 +210,13 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 self.capturedPhoto.transform = CGAffineTransformMakeScale(1.1, 1.1)
                 self.cameraContainer.addSubview(self.capturedPhoto)
                 
+                for image in self.receivedImages {
+                    UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                        image.transform = CGAffineTransformMakeScale(0.001,0.001)
+                        }, completion: { (done) -> Void in
+                    })
+                }
+                
                 UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                     
                     // Show buttons and overlay
@@ -265,10 +272,10 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             capturedPhoto.frame.origin.y = capturedPhoto.originalY + translation.y
             
             if capturedPhoto.center.y < UIScreen.mainScreen().bounds.height/2 {
-                let scale = convertValue(capturedPhoto.center.y, r1Min: 0, r1Max: UIScreen.mainScreen().bounds.height/2, r2Min: 3.0, r2Max: 1.0)
+                let scale = convertValue(capturedPhoto.center.y, r1Min: 0, r1Max: UIScreen.mainScreen().bounds.height/2, r2Min: 2.0, r2Max: 1.0)
                 self.sendButton.transform = CGAffineTransformMakeScale(scale, scale)
             } else {
-                let scale = convertValue(capturedPhoto.center.y, r1Min: UIScreen.mainScreen().bounds.height/2, r1Max: UIScreen.mainScreen().bounds.height, r2Min: 1.0, r2Max: 3.0)
+                let scale = convertValue(capturedPhoto.center.y, r1Min: UIScreen.mainScreen().bounds.height/2, r1Max: UIScreen.mainScreen().bounds.height, r2Min: 1.0, r2Max: 2.0)
                 self.cancelButton.transform = CGAffineTransformMakeScale(scale, scale)
             }
             
@@ -313,7 +320,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 })
             }
         }
-        
     }
     
     func discardPhoto(photoToDiscard:CapturedPhoto) {
@@ -323,6 +329,13 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         self.cancelButton.alpha = 0
         self.overlay.alpha = 0
         cameraPreview.userInteractionEnabled = true
+        
+        for image in self.receivedImages {
+            UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                image.transform = CGAffineTransformMakeScale(0.2,0.2)
+                }, completion: { (done) -> Void in
+            })
+        }
     }
     
     func sendPhoto(photoToSend:CapturedPhoto) {
@@ -345,6 +358,13 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 
                 // Save to camera roll
                 UIImageWriteToSavedPhotosAlbum(UIImage(data: self.capturedPhoto.imageData)!, nil, nil, nil)
+                
+                for image in self.receivedImages {
+                    UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                        image.transform = CGAffineTransformMakeScale(0.2,0.2)
+                        }, completion: { (done) -> Void in
+                    })
+                }
             }
         }
     }
@@ -497,9 +517,16 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 image.contentMode = .ScaleAspectFill
                 image.clipsToBounds = true
             
-                image.transform = CGAffineTransformMakeScale(0.2,0.2)
+                image.transform = CGAffineTransformMakeScale(0.001,0.001)
                 image.setDisplayed()
                 self.view.addSubview(image)
+                
+                UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                    
+                   image.transform = CGAffineTransformMakeScale(0.2,0.2)
+                    
+                    }, completion: { (done) -> Void in
+                })
                 
                 // Add gesture recognizer to top image
                 if image == receivedImages.last {
@@ -515,6 +542,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     func didTapTopImage(sender:UITapGestureRecognizer) {
         
+        cameraPreview.userInteractionEnabled = false
         sender.view?.removeGestureRecognizer(panReceivedThumbnails)
         sender.view?.removeGestureRecognizer(tapPhoto)
         
@@ -535,9 +563,16 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             for image in self.receivedImages {
                 if image.displayed {
                     image.layer.cornerRadius = 0
+                    image.layer.borderWidth = 0.0
+//                    image.layer.borderColor = UIColor.whiteColor().CGColor
                     image.frame.size.height = ((image.frame.height/3.0) * 4.0)
+                    image.center.x = UIScreen.mainScreen().bounds.width/2
+                    image.center.y = UIScreen.mainScreen().bounds.height/2
                     image.transform = CGAffineTransformMakeScale(1,1)
-                    image.addGestureRecognizer(self.panReceivedPhoto)
+                    
+                    if image == self.receivedImages.last {
+                        image.addGestureRecognizer(self.panReceivedPhoto)
+                    }
                 }
             }
 
@@ -617,6 +652,101 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     func didPanReceivedPhoto(sender:UIPanGestureRecognizer) {
         // Decide whether to save or discard
+        let translation = sender.translationInView(view)
+        
+        let image = sender.view as! ReceivedImage
+        
+        if sender.state == UIGestureRecognizerState.Began {
+            
+            image.storeOriginalY(image.frame.origin.y)
+            
+        } else if sender.state == UIGestureRecognizerState.Changed {
+            
+            image.frame.origin.y = image.originalY + translation.y
+            
+            if image.center.y < UIScreen.mainScreen().bounds.height/2 {
+                let scale = convertValue(image.center.y, r1Min: 0, r1Max: UIScreen.mainScreen().bounds.height/2, r2Min: 2.0, r2Max: 1.0)
+                self.sendButton.transform = CGAffineTransformMakeScale(scale, scale)
+            } else {
+                let scale = convertValue(image.center.y, r1Min: UIScreen.mainScreen().bounds.height/2, r1Max: UIScreen.mainScreen().bounds.height, r2Min: 1.0, r2Max: 2.0)
+                self.cancelButton.transform = CGAffineTransformMakeScale(scale, scale)
+            }
+            
+        } else if sender.state == UIGestureRecognizerState.Ended {
+            
+            let options: UIViewAnimationOptions = .CurveEaseInOut
+            
+            // Bounce to center
+            if image.center.y > UIScreen.mainScreen().bounds.height/4 && image.center.y < (UIScreen.mainScreen().bounds.height/4)*3 {
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    image.center.y = UIScreen.mainScreen().bounds.height/2
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                        
+                })
+                // Send
+            } else if image.center.y <= UIScreen.mainScreen().bounds.height/4 {
+                print("save")
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    image.frame.size.height = UIScreen.mainScreen().bounds.origin.y - 50.0
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                       self.saveReceivedPhoto(image)
+                })
+                // Cancel
+            } else {
+                print("cancel")
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    image.frame.origin.y = UIScreen.mainScreen().bounds.height + 50.0
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                        self.discardReceivedPhoto(image)
+                })
+            }
+        }
+    }
+    
+    func saveReceivedPhoto(image: ReceivedImage) {
+        
+        receivedImages.removeLast()
+        if receivedImages.last != nil {
+            receivedImages.last!.addGestureRecognizer(panReceivedPhoto)
+        } else {
+            self.sendButton.alpha = 0
+            self.cancelButton.alpha = 0
+            self.overlay.alpha = 0
+            cameraPreview.userInteractionEnabled = true
+        }
+        
+        // Save to camera roll
+        UIImageWriteToSavedPhotosAlbum(UIImage(data: image.imageData)!, nil, nil, nil)
+        // Delete from Parse
+        image.deleteSeenPhoto(image.objectID)
+    }
+    
+    func discardReceivedPhoto(image: ReceivedImage) {
+        
+        receivedImages.removeLast()
+        if receivedImages.last != nil {
+            receivedImages.last!.addGestureRecognizer(panReceivedPhoto)
+        } else {
+            self.sendButton.alpha = 0
+            self.cancelButton.alpha = 0
+            self.overlay.alpha = 0
+            cameraPreview.userInteractionEnabled = true
+        }
+        // Delete from Parse
+        image.deleteSeenPhoto(image.objectID)
+        
     }
     
     override func didReceiveMemoryWarning() {
