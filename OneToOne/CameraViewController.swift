@@ -39,11 +39,11 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     }
     // View for displaying the preview image
     var cameraPreview:UIView!
+    // Init our CapturedPhoto type
+    var capturedPhoto = CapturedPhoto()
+    
     // Overlay after image captured *placeholder*
     var overlay = UIView()
-    
-    // TEMP VIEW TO HOLD PHOTO ** need to figure out scope stuff **
-    var photoHolder:CapturedPhoto!
     
     // Array to store received images
     var receivedImages: [ReceivedImage] = []
@@ -182,7 +182,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection) {
                 (imageDataSampleBuffer, error) -> Void in
                 
-                self.cameraPreview.removeGestureRecognizer(self.tapCamera)
+                self.cameraPreview.userInteractionEnabled = false
                 
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer)
                 
@@ -199,15 +199,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 let imageHeight = floor(screenSize.width * cameraAspectRatio)
                 let yPos = floor((screenSize.height - imageHeight)/2)
                 
-                // Init our CapturedPhoto type
-                let capturedPhoto = CapturedPhoto()
-                
-                capturedPhoto.userInteractionEnabled = true
-                capturedPhoto.storeData(imageData) // Store the data
-                capturedPhoto.addImage(imageData) // Add the actual image via data
-                capturedPhoto.frame = CGRectMake(0.0, yPos, imageWidth, imageHeight)
-                capturedPhoto.transform = CGAffineTransformMakeScale(1.1, 1.1)
-                self.view.addSubview(capturedPhoto)
+                self.capturedPhoto.userInteractionEnabled = true
+                self.capturedPhoto.storeData(imageData) // Store the data
+                self.capturedPhoto.addImage(imageData) // Add the actual image via data
+                self.capturedPhoto.frame = CGRectMake(0.0, yPos, imageWidth, imageHeight)
+                self.capturedPhoto.transform = CGAffineTransformMakeScale(1.1, 1.1)
+                self.cameraContainer.addSubview(self.capturedPhoto)
                 
                 UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                     
@@ -215,16 +212,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                     self.sendButton.alpha = 1
                     self.cancelButton.alpha = 1
                     self.overlay.alpha = 0.8
-                    capturedPhoto.transform = CGAffineTransformMakeScale(1, 1)
+                    self.capturedPhoto.transform = CGAffineTransformMakeScale(1, 1)
                     
                     }, completion: { (bool) -> Void in
-                        
-                        // Sending to global scope so buttons can reach this...
-                        self.photoHolder = capturedPhoto
-                        
                         // Add pan gesture
                         self.panPhoto = UIPanGestureRecognizer(target: self, action: "didPanPhoto:")
-                        self.photoHolder.addGestureRecognizer(self.panPhoto)
+                        self.capturedPhoto.addGestureRecognizer(self.panPhoto)
                 })
             }
         }
@@ -255,6 +248,67 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     func didPanPhoto(sender:UIPanGestureRecognizer) {
         // Decide if saving or discarding
+        let location = sender.locationInView(view)
+        let velocity = sender.velocityInView(view)
+        let translation = sender.translationInView(view)
+        
+        if sender.state == UIGestureRecognizerState.Began {
+            
+            capturedPhoto.storeOriginalY(capturedPhoto.frame.origin.y)
+            
+        } else if sender.state == UIGestureRecognizerState.Changed {
+            
+            capturedPhoto.frame.origin.y = capturedPhoto.originalY + translation.y
+            
+            if capturedPhoto.center.y < UIScreen.mainScreen().bounds.height/2 {
+                let scale = convertValue(capturedPhoto.center.y, r1Min: 0, r1Max: UIScreen.mainScreen().bounds.height/2, r2Min: 3.0, r2Max: 1.0)
+                self.sendButton.transform = CGAffineTransformMakeScale(scale, scale)
+            } else {
+                let scale = convertValue(capturedPhoto.center.y, r1Min: UIScreen.mainScreen().bounds.height/2, r1Max: UIScreen.mainScreen().bounds.height, r2Min: 1.0, r2Max: 3.0)
+                self.cancelButton.transform = CGAffineTransformMakeScale(scale, scale)
+            }
+            
+        } else if sender.state == UIGestureRecognizerState.Ended {
+            
+            let options: UIViewAnimationOptions = .CurveEaseInOut
+            
+            // Bounce to center
+            if capturedPhoto.center.y > UIScreen.mainScreen().bounds.height/4 && capturedPhoto.center.y < (UIScreen.mainScreen().bounds.height/4)*3 {
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    self.capturedPhoto.center.y = UIScreen.mainScreen().bounds.height/2
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                        }, completion: { finished in
+
+                    })
+            // Send
+            } else if capturedPhoto.center.y <= UIScreen.mainScreen().bounds.height/4 {
+            print("send")
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    self.capturedPhoto.frame.size.height = UIScreen.mainScreen().bounds.origin.y - 50.0
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                        self.sendPhoto(self.capturedPhoto)
+                })
+            // Cancel
+            } else {
+            print("cancel")
+                UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+                    
+                    self.capturedPhoto.frame.origin.y = UIScreen.mainScreen().bounds.height + 50.0
+                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    
+                    }, completion: { finished in
+                        self.discardPhoto(self.capturedPhoto)
+                })
+            }
+        }
         
     }
     
@@ -264,24 +318,39 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         self.sendButton.alpha = 0
         self.cancelButton.alpha = 0
         self.overlay.alpha = 0
-        cameraPreview.addGestureRecognizer(tapCamera)
+        cameraPreview.userInteractionEnabled = true
+    }
+    
+    func sendPhoto(photoToSend:CapturedPhoto) {
+        
+        self.sendButton.setTitle("Sending...", forState: .Normal)
+        self.sendButton.userInteractionEnabled = false
+        
+        // TODO: MAKE THIS NICE
+        capturedPhoto.sendImage(capturedPhoto.imageData, recipientUsername: recipientUsername) { (sent) -> Void in
+            print("Sending...") // ADD LOADING SPINNER
+            if sent {
+                print("Sent")
+                self.capturedPhoto.removeFromSuperview()
+                self.sendButton.alpha = 0
+                self.cancelButton.alpha = 0
+                self.overlay.alpha = 0
+                self.cameraPreview.userInteractionEnabled = true
+                self.sendButton.setTitle("Send", forState: .Normal)
+                self.sendButton.userInteractionEnabled = true
+                
+                // Save to camera roll
+                UIImageWriteToSavedPhotosAlbum(UIImage(data: self.capturedPhoto.imageData)!, nil, nil, nil)
+            }
+        }
     }
     
     @IBAction func didSendPhoto(sender: UIButton) {
-        // Save to camera roll
-        UIImageWriteToSavedPhotosAlbum(UIImage(data: photoHolder.imageData)!, nil, nil, nil)
-        
-        // TODO: MAKE THIS NICE
-        photoHolder.sendImage(photoHolder.imageData, recipientUsername: recipientUsername)
-        photoHolder.removeFromSuperview()
-        self.sendButton.alpha = 0
-        self.cancelButton.alpha = 0
-        self.overlay.alpha = 0
-        cameraPreview.addGestureRecognizer(tapCamera)
+        sendPhoto(capturedPhoto)
     }
     
     @IBAction func didDiscardPhoto(sender: UIButton) {
-        discardPhoto(photoHolder)
+        discardPhoto(capturedPhoto)
     }
     
     
