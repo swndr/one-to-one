@@ -91,7 +91,7 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "cameraSegue" {
+        if segue.identifier == "pairingToCameraSegue" {
             if let destinationVC = segue.destinationViewController as? CameraViewController {
                 destinationVC.justPaired = true
             }
