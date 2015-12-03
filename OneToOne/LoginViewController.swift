@@ -9,14 +9,13 @@
 import UIKit
 import Parse
 
-class LoginViewController: UIViewController{
+class LoginViewController: UIViewController {
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var pairingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var PairingTextParentView: UIView!
     
-    var fadeTransition: FadeTransition!
     var returningFromPairing = false
     
     override func viewDidLoad() {
@@ -62,7 +61,7 @@ class LoginViewController: UIViewController{
     @IBAction func didPressNext(sender: AnyObject) {
         attemptLogin()
     }
-    
+        
     func attemptLogin() {
         self.pairingIndicator.startAnimating()
         nextButton.selected = true
@@ -158,19 +157,12 @@ class LoginViewController: UIViewController{
         if segue.identifier == "pairingSegue" {
             if let destinationVC = segue.destinationViewController as? PairingViewController {
                 destinationVC.enteredCode = textField.text!
-                
-                // custom animated segue
-                destinationVC.modalPresentationStyle = UIModalPresentationStyle.Custom
-                destinationVC.transitioningDelegate = fadeTransition
-                destinationVC.view.layoutIfNeeded()
             }
-            
         } else if segue.identifier == "cameraSegue" {
             if let destinationVC = segue.destinationViewController as? CameraViewController {
                 destinationVC.justPaired = true
             }
         }
-        
     }
     
     func keyboardWillShow(notification: NSNotification!) {
@@ -184,5 +176,5 @@ class LoginViewController: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
+
 }

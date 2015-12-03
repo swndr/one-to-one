@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D9BFF451C0FDBF60045ED09 /* FadeTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9BFF441C0FDBF60045ED09 /* FadeTransition.swift */; settings = {ASSET_TAGS = (); }; };
-		5D9BFF471C0FDCB60045ED09 /* BaseTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9BFF461C0FDCB60045ED09 /* BaseTransition.swift */; settings = {ASSET_TAGS = (); }; };
 		5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */; };
 		5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB576781BFD7D5D00DD5AB9 /* Common.swift */; };
 		AE3186C01109D73CE8629C73 /* Pods_OneToOne.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */; };
@@ -26,8 +24,6 @@
 
 /* Begin PBXFileReference section */
 		33BFFEFBD7DEBCFAE66A0EA9 /* Pods-OneToOne.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneToOne.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneToOne/Pods-OneToOne.debug.xcconfig"; sourceTree = "<group>"; };
-		5D9BFF441C0FDBF60045ED09 /* FadeTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FadeTransition.swift; sourceTree = "<group>"; };
-		5D9BFF461C0FDCB60045ED09 /* BaseTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTransition.swift; sourceTree = "<group>"; };
 		5DB576761BFD7A3E00DD5AB9 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5DB576781BFD7D5D00DD5AB9 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		A69691CC32ABE419D4403F34 /* Pods_OneToOne.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneToOne.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,8 +92,6 @@
 				C2ACB92B1C026C260058B6FF /* ReceivedImage.swift */,
 				C2B881911C065135004DB36B /* CapturedPhoto.swift */,
 				5DB576781BFD7D5D00DD5AB9 /* Common.swift */,
-				5D9BFF461C0FDCB60045ED09 /* BaseTransition.swift */,
-				5D9BFF441C0FDBF60045ED09 /* FadeTransition.swift */,
 				C216108D1BFCEFE300284FE9 /* Main.storyboard */,
 				C21610921BFCEFE400284FE9 /* LaunchScreen.storyboard */,
 				C21610901BFCEFE400284FE9 /* Assets.xcassets */,
@@ -249,9 +243,7 @@
 				C216109E1BFCF1FC00284FE9 /* CameraViewController.swift in Sources */,
 				C216109C1BFCF1F400284FE9 /* PairingViewController.swift in Sources */,
 				C2ACB92E1C026C260058B6FF /* User.swift in Sources */,
-				5D9BFF451C0FDBF60045ED09 /* FadeTransition.swift in Sources */,
 				C216108A1BFCEFE300284FE9 /* AppDelegate.swift in Sources */,
-				5D9BFF471C0FDCB60045ED09 /* BaseTransition.swift in Sources */,
 				5DB576791BFD7D5D00DD5AB9 /* Common.swift in Sources */,
 				5DB576771BFD7A3E00DD5AB9 /* MainViewController.swift in Sources */,
 			);
