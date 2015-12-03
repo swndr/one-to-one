@@ -31,3 +31,7 @@ func degree2radian(a:CGFloat)->CGFloat {
     let b = CGFloat(M_PI) * a/180
     return b
 }
+
+func randRange (lower: Int , upper: Int) -> CGFloat {
+    return CGFloat(lower + Int(arc4random_uniform(UInt32(upper - lower + 1))))
+}
