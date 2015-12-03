@@ -16,6 +16,10 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     @IBOutlet weak var cameraContainer: UIView!
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var discardButton: UIButton!
+    @IBOutlet weak var flipButton: UIButton!
+    @IBOutlet weak var nuxBanner: UIView!
     
     var justPaired = false
     var recipientUsername = ""
@@ -65,6 +69,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     // Pan gesture for saving / discarding received photos
     var panReceivedPhoto: UIPanGestureRecognizer = UIPanGestureRecognizer()
     
+    // Timer
+    var timer = NSTimer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("Opened camera")
@@ -72,8 +79,12 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         //let user = PFUser.currentUser()
         recipientUsername = user!["recipient"] as! String
         
+        // Nux Banner
         if justPaired {
             print("Show NUX banner")
+            nuxBanner.alpha = 1
+        } else {
+            nuxBanner.alpha = 0
         }
         
         // Initially set to use back camera
@@ -103,19 +114,19 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         
         sendButton.alpha = 0
         cancelButton.alpha = 0
+        saveButton.alpha = 0
+        discardButton.alpha = 0
     }
     
     override func viewDidAppear(animated: Bool) {
         // Fetch new photos
-        // TODO: FIND WAY TO AUTOMATE / INITIATE REFRESHING
-        
         if receivedImages.count == 0 {
             lastThumbX = 0
             lastThumbY = 0
         }
         
-        // Add notif observer (may need to remove too?)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "newPhoto", object: nil)
+        // Add notif observer
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "respondToNotif:", name: "newPhoto", object: nil)
 
         getNewPhotos { (ready) -> Void in
             if ready {
@@ -123,6 +134,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 self.displayReceivedPhotos()
             }
         }
+        
+        startTimer()
     }
     
     func loadCamera() {
@@ -182,6 +195,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     // Called when preview view is tapped to take picture
     func didTakePhoto(sender: UITapGestureRecognizer) {
+        
+        endTimer()
+        
         if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection) {
                 (imageDataSampleBuffer, error) -> Void in
@@ -218,6 +234,15 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 }
                 
                 UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                    
+                    // NUX Banner
+                    if self.justPaired {
+                        self.justPaired = false
+                        self.nuxBanner.alpha = 0
+                    }
+                    
+                    // Hide Flip
+                    self.flipButton.alpha = 0
                     
                     // Show buttons and overlay
                     self.sendButton.alpha = 1
@@ -329,7 +354,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             self.sendButton.alpha = 0
             self.cancelButton.alpha = 0
             self.overlay.alpha = 0
+            self.flipButton.alpha = 1
             }, completion: { (done) -> Void in
+                self.startTimer()
         })
         cameraPreview.userInteractionEnabled = true
         
@@ -356,7 +383,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                     self.sendButton.alpha = 0
                     self.cancelButton.alpha = 0
                     self.overlay.alpha = 0
+                    self.flipButton.alpha = 1
                     }, completion: { (done) -> Void in
+                        self.startTimer()
                 })
                 self.cameraPreview.userInteractionEnabled = true
                 self.sendButton.setTitle("Send", forState: .Normal)
@@ -413,11 +442,27 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     ///// RECEIVING PHOTOS /////
     
+    func startTimer() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(15, target: self, selector: Selector("lookForNewPhotos"), userInfo: nil, repeats: true)
+    }
+    
+    func endTimer() {
+        timer.invalidate()
+    }
+    
+    func lookForNewPhotos() {
+        getNewPhotos { (ready) -> Void in
+            if ready {
+                self.receivedImages.sortInPlace({ $0.created.timeIntervalSince1970 > $1.created.timeIntervalSince1970 })
+                self.displayReceivedPhotos()
+            }
+        }
+    }
+    
+    // IGNORING THIS FOR DEMO
     func respondToNotif(userInfo:NSNotification) {
     
         print("Responding to notif")
-        // TODO: WORKING BUT NEW IMAGE ENDS UP UNDER OLD ONE AT MOMENT
-        
         getNewPhotos { (ready) -> Void in
             if ready {
                 self.receivedImages.sortInPlace({ $0.created.timeIntervalSince1970 > $1.created.timeIntervalSince1970 })
@@ -567,6 +612,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     
     func didTapTopImage(sender:UITapGestureRecognizer) {
         
+        endTimer()
+        
         cameraPreview.userInteractionEnabled = false
         sender.view?.removeGestureRecognizer(panReceivedThumbnails)
         sender.view?.removeGestureRecognizer(tapPhoto)
@@ -581,6 +628,9 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 self.cameraPreview.addSubview(self.overlay)
             }
             self.overlay.alpha = 0.8
+            self.saveButton.alpha = 1
+            self.discardButton.alpha = 1
+            self.flipButton.alpha = 0
             
             self.panReceivedPhoto = UIPanGestureRecognizer(target: self, action: "didPanReceivedPhoto:")
             
@@ -589,7 +639,6 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 if image.displayed {
                     image.layer.cornerRadius = 0
                     image.layer.borderWidth = 0.0
-//                    image.layer.borderColor = UIColor.whiteColor().CGColor
                     image.frame.size.height = ((image.frame.height/3.0) * 4.0)
                     image.center.x = UIScreen.mainScreen().bounds.width/2
                     image.center.y = UIScreen.mainScreen().bounds.height/2
@@ -602,6 +651,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             }
 
             }) { (finished) -> Void in
+                self.view.bringSubviewToFront(self.saveButton)
+                self.view.bringSubviewToFront(self.discardButton)
                 
         }
     }
@@ -632,7 +683,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
                     if image.center.x < UIScreen.mainScreen().bounds.width/2 && image.center.y < UIScreen.mainScreen().bounds.height/2 {
                         if self.lastThumbX == 0 {
-                            image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 60, UIScreen.mainScreen().bounds.origin.y + 50)
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 100, UIScreen.mainScreen().bounds.origin.y + 100)
                             self.lastThumbX = image.center.x
                             self.lastThumbY = image.center.y
                         } else {
@@ -642,7 +693,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                         }
                     } else if image.center.x > UIScreen.mainScreen().bounds.width/2 && image.center.y < UIScreen.mainScreen().bounds.height/2 {
                         if self.lastThumbX == 0 {
-                            image.center = CGPointMake(UIScreen.mainScreen().bounds.width - 60, UIScreen.mainScreen().bounds.origin.y + 50)
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.width - 100, UIScreen.mainScreen().bounds.origin.y + 100)
                             self.lastThumbX = image.center.x
                             self.lastThumbY = image.center.y
                         } else {
@@ -652,7 +703,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                         }
                     } else if image.center.x > UIScreen.mainScreen().bounds.width/2 && image.center.y > UIScreen.mainScreen().bounds.height/2 {
                         if self.lastThumbX == 0 {
-                            image.center = CGPointMake(UIScreen.mainScreen().bounds.width - 60, UIScreen.mainScreen().bounds.height - 50)
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.width - 100, UIScreen.mainScreen().bounds.height - 100)
                             self.lastThumbX = image.center.x
                             self.lastThumbY = image.center.y
                         } else {
@@ -662,7 +713,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                         }
                     } else {
                         if self.lastThumbX == 0 {
-                            image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 60, UIScreen.mainScreen().bounds.height - 50)
+                            image.center = CGPointMake(UIScreen.mainScreen().bounds.origin.x + 100, UIScreen.mainScreen().bounds.height - 100)
                             self.lastThumbX = image.center.x
                             self.lastThumbY = image.center.y
                         } else {
@@ -692,10 +743,10 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             
             if image.center.y < UIScreen.mainScreen().bounds.height/2 {
                 let scale = convertValue(image.center.y, r1Min: 0, r1Max: UIScreen.mainScreen().bounds.height/2, r2Min: 2.0, r2Max: 1.0)
-                self.sendButton.transform = CGAffineTransformMakeScale(scale, scale)
+                self.saveButton.transform = CGAffineTransformMakeScale(scale, scale)
             } else {
                 let scale = convertValue(image.center.y, r1Min: UIScreen.mainScreen().bounds.height/2, r1Max: UIScreen.mainScreen().bounds.height, r2Min: 1.0, r2Max: 2.0)
-                self.cancelButton.transform = CGAffineTransformMakeScale(scale, scale)
+                self.discardButton.transform = CGAffineTransformMakeScale(scale, scale)
             }
             
         } else if sender.state == UIGestureRecognizerState.Ended {
@@ -707,8 +758,8 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
                 UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
                     
                     image.center.y = UIScreen.mainScreen().bounds.height/2
-                    self.sendButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
-                    self.cancelButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.saveButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                    self.discardButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
                     
                     }, completion: { finished in
                         
@@ -750,7 +801,11 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             self.sendButton.alpha = 0
             self.cancelButton.alpha = 0
             self.overlay.alpha = 0
+            self.saveButton.alpha = 0
+            self.discardButton.alpha = 0
+            self.flipButton.alpha = 1
             cameraPreview.userInteractionEnabled = true
+            startTimer()
         }
         
         // Save to camera roll
@@ -769,12 +824,46 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
             self.sendButton.alpha = 0
             self.cancelButton.alpha = 0
             self.overlay.alpha = 0
+            self.saveButton.alpha = 0
+            self.discardButton.alpha = 0
+            self.flipButton.alpha = 1
             cameraPreview.userInteractionEnabled = true
+            startTimer()
         }
         // Delete from Parse
         image.deleteSeenPhoto(image.objectID)
         image.removeFromSuperview()
         
+    }
+    
+    @IBAction func didSavePhoto(sender: AnyObject) {
+        let options: UIViewAnimationOptions = .CurveEaseInOut
+        UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+            
+            self.receivedImages.last!.frame.size.height = UIScreen.mainScreen().bounds.origin.y - 50.0
+            self.saveButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.discardButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            
+            }, completion: { finished in
+                delay(0.5, closure: { () -> () in
+                    self.saveReceivedPhoto(self.receivedImages.last!)
+                })
+        })
+    }
+    
+    @IBAction func didDiscardReceivedPhoto(sender: AnyObject) {
+        let options: UIViewAnimationOptions = .CurveEaseInOut
+        UIView.animateWithDuration(0.2, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 2, options: options, animations: { () -> Void in
+            
+            self.receivedImages.last!.frame.origin.y = UIScreen.mainScreen().bounds.height + 50.0
+            self.saveButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.discardButton.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            
+            }, completion: { finished in
+                delay(0.5, closure: { () -> () in
+                    self.discardReceivedPhoto(self.receivedImages.last!)
+                })
+        })
     }
     
     override func didReceiveMemoryWarning() {
