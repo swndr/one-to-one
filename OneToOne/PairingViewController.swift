@@ -8,13 +8,29 @@
 
 import UIKit
 import Parse
+import AVFoundation
+import AVKit
 import MessageUI
 
 class PairingViewController: UIViewController, MFMessageComposeViewControllerDelegate{
     
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var sendMessageButton: UIButton!
+    @IBOutlet weak var cameraContainer: UIView!
+
     var enteredCode = ""
+    
+    // Capture session
+    let captureSession = AVCaptureSession()
+    // Two camera inputs
+    var frontCameraInput = AVCaptureDeviceInput()
+    var backCameraInput = AVCaptureDeviceInput()
+    // Image output
+    let stillImageOutput = AVCaptureStillImageOutput()
+    // View for displaying the preview image
+    var cameraPreview:UIView!
+    // Overlay after image captured
+    var overlay = UIView()
     
     // Starting elapsed time at 0 so on first loading we can show 10:00 remaining
     var elapsedTime: NSTimeInterval = 0
@@ -48,6 +64,29 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 }
             }
         }
+        
+        // get camera
+        let authorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+        switch authorizationStatus {
+        case .NotDetermined:
+            // Request authorization
+            AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo,
+                completionHandler: { (granted:Bool) -> Void in
+                    if granted {
+                        // Continue
+                        self.loadCamera()
+                    }
+                    else {
+                        // user denied: show an error?
+                    }
+            })
+        case .Authorized:
+            // Continue
+            loadCamera()
+        case .Denied, .Restricted:
+            print("Can't open camera")
+            // Denied!
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -63,6 +102,68 @@ class PairingViewController: UIViewController, MFMessageComposeViewControllerDel
                 self.elapsedTime = interval
             }
         }
+    }
+    
+    func loadCamera() {
+        
+        // Get available devices (e.g back and front camera)
+        let availableCameraDevices = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
+        for device in availableCameraDevices as! [AVCaptureDevice] {
+            if device.position == .Back {
+                let backCameraDevice = device
+                do {
+                    let possibleBackCamera = try AVCaptureDeviceInput(device: backCameraDevice)
+                    backCameraInput = possibleBackCamera
+                    try captureSession.addInput(backCameraInput)
+                    do {
+                        try backCameraDevice.lockForConfiguration()
+                        backCameraDevice.focusMode = .ContinuousAutoFocus
+                        backCameraDevice.unlockForConfiguration()
+                    } catch _ {
+                        // Couldn't set focus
+                    }
+                } catch _ {
+                    // Couldn't set back camera input
+                }
+            }
+            else if device.position == .Front {
+                let frontCameraDevice = device
+                do {
+                    let possibleFrontCamera = try AVCaptureDeviceInput(device: frontCameraDevice)
+                    frontCameraInput = possibleFrontCamera
+                } catch _ {
+                    // Couldn't set front camera input
+                }
+            }
+        }
+        
+        
+        // Begin capture session
+        captureSession.sessionPreset = AVCaptureSessionPresetPhoto
+        captureSession.startRunning()
+        // Set output
+        stillImageOutput.outputSettings = [AVVideoCodecKey:AVVideoCodecJPEG,AVVideoQualityKey: 0.9]
+        if captureSession.canAddOutput(stillImageOutput) {
+            captureSession.addOutput(stillImageOutput)
+        }
+        
+        // Create the preview layer to display camera input
+        if let preview = AVCaptureVideoPreviewLayer(session: captureSession) {
+            let previewLayer = preview
+            previewLayer.bounds = CGRectMake(0.0, 0.0, view.bounds.size.width, view.bounds.size.height)
+            previewLayer.position = CGPointMake(view.bounds.midX, view.bounds.midY)
+            previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            cameraPreview = UIView(frame: CGRectMake(0.0, 0.0, view.bounds.size.width, view.bounds.size.height))
+            cameraPreview.layer.addSublayer(previewLayer)
+            cameraContainer.addSubview(cameraPreview)
+            
+            // overlay
+            self.overlay.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)
+            self.overlay.backgroundColor = UIColor.blackColor()
+            self.overlay.alpha = 0.8
+            self.cameraPreview.addSubview(self.overlay)
+        }
+        
     }
     
     func update() {

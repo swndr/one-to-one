@@ -29,6 +29,10 @@ class LoginViewController: UIViewController {
     var backCameraInput = AVCaptureDeviceInput()
     // Image output
     let stillImageOutput = AVCaptureStillImageOutput()
+    // View for displaying the preview image
+    var cameraPreview:UIView!
+    // Overlay after image captured
+    var overlay = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,7 +135,7 @@ class LoginViewController: UIViewController {
         if captureSession.canAddOutput(stillImageOutput) {
             captureSession.addOutput(stillImageOutput)
         }
-        /*
+        
         // Create the preview layer to display camera input
         if let preview = AVCaptureVideoPreviewLayer(session: captureSession) {
             let previewLayer = preview
@@ -140,11 +144,15 @@ class LoginViewController: UIViewController {
             previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
             cameraPreview = UIView(frame: CGRectMake(0.0, 0.0, view.bounds.size.width, view.bounds.size.height))
             cameraPreview.layer.addSublayer(previewLayer)
-            tapCamera = UITapGestureRecognizer(target: self, action: "didTakePhoto:")
-            cameraPreview.addGestureRecognizer(tapCamera)
             cameraContainer.addSubview(cameraPreview)
+            
+            // overlay
+            self.overlay.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)
+            self.overlay.backgroundColor = UIColor.blackColor()
+            self.overlay.alpha = 0.8
+            self.cameraPreview.addSubview(self.overlay)
         }
-        */
+        
     }
     
     @IBAction func didPressNextKey(sender: AnyObject) {

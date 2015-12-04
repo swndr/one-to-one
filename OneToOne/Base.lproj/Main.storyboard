@@ -17,6 +17,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Llf-Ia-d3L" userLabel="Camera Container">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.25879129769999998" green="0.25884205100000002" blue="0.25878810880000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fh8-Pl-zcW" userLabel="PairingText">
                                 <rect key="frame" x="144" y="112" width="312" height="213"/>
                                 <subviews>
@@ -37,7 +41,7 @@
                                                 <animations/>
                                                 <color key="textColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="next"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" keyboardAppearance="alert" returnKeyType="next"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="_placeholderLabel.textColor">
                                                         <color key="value" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -94,21 +98,17 @@
                                     <constraint firstItem="1zG-s1-wPk" firstAttribute="leading" secondItem="Fh8-Pl-zcW" secondAttribute="leading" id="o0K-HY-BDx"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Llf-Ia-d3L" userLabel="Camera Container">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" red="0.25879129769999998" green="0.25884205100000002" blue="0.25878810880000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
                         </subviews>
                         <animations/>
                         <constraints>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3e7-B4-Afh"/>
-                            <constraint firstItem="Llf-Ia-d3L" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="JV8-My-KvV"/>
+                            <constraint firstItem="Llf-Ia-d3L" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="JV8-My-KvV"/>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="top" secondItem="R5t-0p-6n8" secondAttribute="bottom" constant="48" id="MwF-Hh-926"/>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="TSB-i5-gwJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Fh8-Pl-zcW" secondAttribute="trailing" id="ZWb-sV-v6q"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Llf-Ia-d3L" secondAttribute="trailing" id="bhT-67-Hd5"/>
+                            <constraint firstAttribute="trailing" secondItem="Llf-Ia-d3L" secondAttribute="trailing" id="bhT-67-Hd5"/>
                             <constraint firstItem="aCP-ug-Zpd" firstAttribute="top" secondItem="Llf-Ia-d3L" secondAttribute="bottom" id="d3j-TY-tPr"/>
-                            <constraint firstItem="Llf-Ia-d3L" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="iOv-HJ-WsG"/>
+                            <constraint firstItem="Llf-Ia-d3L" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="iOv-HJ-WsG"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="eEy-sY-cjP"/>
@@ -272,7 +272,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
-                        <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.76106613874435425" green="0.6618158221244812" blue="0.23439821600914001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HFe-S7-eWU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -291,6 +291,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e7r-6P-TI2" userLabel="Camera Container">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.25879129769999998" green="0.25884205100000002" blue="0.25878810880000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y0r-4B-AOj" userLabel="WaitingText">
                                 <rect key="frame" x="0.0" y="158" width="310" height="194"/>
                                 <subviews>
@@ -320,7 +324,6 @@
                                     </button>
                                 </subviews>
                                 <animations/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="weS-0q-RTM" firstAttribute="leading" secondItem="y0r-4B-AOj" secondAttribute="leading" id="Lx4-vE-BB5"/>
                                     <constraint firstItem="4wQ-99-o4v" firstAttribute="top" secondItem="weS-0q-RTM" secondAttribute="bottom" constant="18" id="QmE-Rq-ldj"/>
@@ -329,7 +332,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhf-Jp-yhM">
-                                <rect key="frame" x="0.0" y="0.0" width="56" height="34"/>
+                                <rect key="frame" x="20" y="0.0" width="56" height="34"/>
                                 <animations/>
                                 <state key="normal" title="Cancel">
                                     <color key="titleColor" red="0.38651725650000002" green="0.85240232940000005" blue="0.74656403059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -341,16 +344,17 @@
                         </subviews>
                         <animations/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="y0r-4B-AOj" secondAttribute="trailing" id="7Sn-Nh-HhA"/>
+                            <constraint firstItem="Vhf-Jp-yhM" firstAttribute="leading" secondItem="INj-vn-3Yo" secondAttribute="leadingMargin" id="Lrd-6l-qfP"/>
+                            <constraint firstItem="Vhf-Jp-yhM" firstAttribute="top" secondItem="INj-vn-3Yo" secondAttribute="top" constant="-32" id="OgB-LL-icd"/>
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="top" secondItem="Vhf-Jp-yhM" secondAttribute="bottom" constant="48" id="U2V-08-Cv3"/>
-                            <constraint firstItem="y0r-4B-AOj" firstAttribute="leading" secondItem="INj-vn-3Yo" secondAttribute="leadingMargin" id="dM2-Mi-gbm"/>
-                            <constraint firstItem="Vhf-Jp-yhM" firstAttribute="top" secondItem="P9I-gt-zOc" secondAttribute="bottom" id="jWg-8D-cIL"/>
-                            <constraint firstItem="Vhf-Jp-yhM" firstAttribute="leading" secondItem="INj-vn-3Yo" secondAttribute="leadingMargin" id="kBM-WW-yDi"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="y0r-4B-AOj" secondAttribute="trailing" id="rIP-Ds-17d"/>
+                            <constraint firstItem="y0r-4B-AOj" firstAttribute="leading" secondItem="INj-vn-3Yo" secondAttribute="leadingMargin" id="brE-mr-kZG"/>
                             <constraint firstItem="y0r-4B-AOj" firstAttribute="centerX" secondItem="INj-vn-3Yo" secondAttribute="centerX" id="rXS-fM-9sn"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="GOL-zn-3WY"/>
                     <connections>
+                        <outlet property="cameraContainer" destination="e7r-6P-TI2" id="nZS-96-EZW"/>
                         <outlet property="instructionLabel" destination="weS-0q-RTM" id="XPN-ge-Jp3"/>
                         <outlet property="sendMessageButton" destination="4wQ-99-o4v" id="TXu-qA-9zs"/>
                         <segue destination="dK9-Td-VYL" kind="presentation" identifier="pairingToCameraSegue" animates="NO" id="bnm-uG-T0h"/>
@@ -362,6 +366,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="igW-Ls-xGo"/>
+        <segue reference="bnm-uG-T0h"/>
     </inferredMetricsTieBreakers>
 </document>
