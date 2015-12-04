@@ -371,6 +371,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
     func sendPhoto(photoToSend:CapturedPhoto) {
         
         self.sendButton.setTitle("Sending...", forState: .Normal)
+        self.cancelButton.alpha = 0
         self.sendButton.userInteractionEnabled = false
         
         // TODO: MAKE THIS NICE
