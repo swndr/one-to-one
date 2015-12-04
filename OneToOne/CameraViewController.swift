@@ -798,14 +798,15 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         if receivedImages.last != nil {
             receivedImages.last!.addGestureRecognizer(panReceivedPhoto)
         } else {
-            self.sendButton.alpha = 0
-            self.cancelButton.alpha = 0
-            self.overlay.alpha = 0
-            self.saveButton.alpha = 0
-            self.discardButton.alpha = 0
-            self.flipButton.alpha = 1
-            cameraPreview.userInteractionEnabled = true
-            startTimer()
+            UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                self.overlay.alpha = 0
+                self.saveButton.alpha = 0
+                self.discardButton.alpha = 0
+                self.flipButton.alpha = 1
+                }, completion: { (done) -> Void in
+                    self.startTimer()
+                    self.cameraPreview.userInteractionEnabled = true
+            })
         }
         
         // Save to camera roll
@@ -821,14 +822,15 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate {
         if receivedImages.last != nil {
             receivedImages.last!.addGestureRecognizer(panReceivedPhoto)
         } else {
-            self.sendButton.alpha = 0
-            self.cancelButton.alpha = 0
-            self.overlay.alpha = 0
-            self.saveButton.alpha = 0
-            self.discardButton.alpha = 0
-            self.flipButton.alpha = 1
-            cameraPreview.userInteractionEnabled = true
-            startTimer()
+            UIView.animateWithDuration(0.2, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                self.overlay.alpha = 0
+                self.saveButton.alpha = 0
+                self.discardButton.alpha = 0
+                self.flipButton.alpha = 1
+                }, completion: { (done) -> Void in
+                    self.startTimer()
+                    self.cameraPreview.userInteractionEnabled = true
+            })
         }
         // Delete from Parse
         image.deleteSeenPhoto(image.objectID)
