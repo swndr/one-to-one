@@ -102,8 +102,8 @@
                         <animations/>
                         <constraints>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3e7-B4-Afh"/>
+                            <constraint firstItem="Fh8-Pl-zcW" firstAttribute="top" secondItem="R5t-0p-6n8" secondAttribute="bottom" constant="92" id="EVL-dw-AqM"/>
                             <constraint firstItem="Llf-Ia-d3L" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="JV8-My-KvV"/>
-                            <constraint firstItem="Fh8-Pl-zcW" firstAttribute="top" secondItem="R5t-0p-6n8" secondAttribute="bottom" constant="48" id="MwF-Hh-926"/>
                             <constraint firstItem="Fh8-Pl-zcW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="TSB-i5-gwJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Fh8-Pl-zcW" secondAttribute="trailing" id="ZWb-sV-v6q"/>
                             <constraint firstAttribute="trailing" secondItem="Llf-Ia-d3L" secondAttribute="trailing" id="bhT-67-Hd5"/>
@@ -296,15 +296,8 @@
                                 <color key="backgroundColor" red="0.25879129769999998" green="0.25884205100000002" blue="0.25878810880000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y0r-4B-AOj" userLabel="WaitingText">
-                                <rect key="frame" x="0.0" y="158" width="310" height="194"/>
+                                <rect key="frame" x="0.0" y="178" width="310" height="194"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Waiting to pair..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-Xw-9tf">
-                                        <rect key="frame" x="0.0" y="23" width="311" height="22"/>
-                                        <animations/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <color key="textColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="weS-0q-RTM">
                                         <rect key="frame" x="0.0" y="63" width="311" height="46"/>
                                         <animations/>
@@ -322,6 +315,13 @@
                                             <action selector="didPressSendMessage:" destination="idb-7w-007" eventType="touchUpInside" id="tS9-qc-Hjx"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Waiting to pair..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ovh-Xw-9tf">
+                                        <rect key="frame" x="0.0" y="23" width="311" height="22"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <animations/>
                                 <constraints>
@@ -366,6 +366,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="bnm-uG-T0h"/>
+        <segue reference="igW-Ls-xGo"/>
     </inferredMetricsTieBreakers>
 </document>
