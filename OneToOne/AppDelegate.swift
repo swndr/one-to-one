@@ -18,15 +18,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Parse.setApplicationId("myeITsplOiQ4R1ATdPg9fSsF9gNMKBwT8v00OwER", clientKey: "xumfIymIDYPpdxBtoQBY0a3JSGdieXGrUiCWdJeM")
         
-                if #available(iOS 8.0, *) {
-                    let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
-                    let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
-                    application.registerUserNotificationSettings(settings)
-                    application.registerForRemoteNotifications()
-                } else {
-                    let types: UIRemoteNotificationType = [.Alert, .Badge, .Sound]
-                    application.registerForRemoteNotificationTypes(types)
-                }
+//                if #available(iOS 8.0, *) {
+//                    let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
+//                    let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
+//                    application.registerUserNotificationSettings(settings)
+//                    application.registerForRemoteNotifications()
+//                } else {
+//                    let types: UIRemoteNotificationType = [.Alert, .Badge, .Sound]
+//                    application.registerForRemoteNotificationTypes(types)
+//                }
         
         func handleUserStatus() {
             
